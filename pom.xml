@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>org.camunda.bpm.elasticsearch</groupId>
+  <artifactId>camunda-bpm-elasticsearch</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
+  <packaging>pom</packaging>
+
+  <properties>
+    <version.elasticsearch>0.90.7</version.elasticsearch>
+    <version.jackson>2.2.3</version.jackson>
+    <version.lucene>4.5.1</version.lucene>
+    <version.guava>15.0</version.guava>
+
+    <version.elasticsearch-test>0.90.6</version.elasticsearch-test>
+    <version.camunda-bpm>7.1.0-SNAPSHOT</version.camunda-bpm>
+    <version.activemq>5.9.0</version.activemq>
+
+    <version.junit>4.11</version.junit>
+
+    <version.spring>3.1.2.RELEASE</version.spring>
+    <version.spring-it>2.2.5.RELEASE</version.spring-it>
+
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+  </properties>
+
+  <modules>
+    <module>elasticsearch-cockpit-plugin</module>
+    <module>elasticsearch-engine-integration</module>
+    <module>elasticsearch-jboss-module</module>
+  </modules>
+
+  <dependencyManagement>
+    <dependencies>
+      <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>${version.elasticsearch}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>org.camunda.bpm</groupId>
+        <artifactId>camunda-engine</artifactId>
+        <version>${version.camunda-bpm}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.uuid</groupId>
+        <artifactId>java-uuid-generator</artifactId>
+        <version>3.1.2</version>
+      </dependency>
+      <dependency>
+        <groupId>org.camunda.bpm.jboss</groupId>
+        <artifactId>camunda-jboss-subsystem</artifactId>
+        <version>${version.camunda-bpm}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.h2database</groupId>
+        <artifactId>h2</artifactId>
+        <version>1.3.168</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.github.tlrx</groupId>
+        <artifactId>elasticsearch-test</artifactId>
+        <version>${version.elasticsearch-test}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-core</artifactId>
+        <version>${version.jackson}</version>
+      </dependency>
+      <dependency>
+        <groupId>com.fasterxml.jackson.core</groupId>
+        <artifactId>jackson-databind</artifactId>
+        <version>${version.jackson}</version>
+      </dependency>
+
+      <dependency>
+        <groupId>junit</groupId>
+        <artifactId>junit</artifactId>
+        <version>${version.junit}</version>
+      </dependency>
+
+      <!-- JMS INTEGRATION -->
+      <dependency>
+        <groupId>org.apache.activemq</groupId>
+        <artifactId>activemq-all</artifactId>
+        <version>${version.activemq}</version>
+      </dependency>
+
+      <!-- SPRING INTEGRATION -->
+      <dependency>
+        <groupId>org.springframework.integration</groupId>
+        <artifactId>spring-integration-jms</artifactId>
+        <version>${version.spring-it}</version>
+      </dependency>
+
+      <!-- SPRING -->
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-core</artifactId>
+        <version>${version.spring}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context</artifactId>
+        <version>${version.spring}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-context-support</artifactId>
+        <version>${version.spring}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-beans</artifactId>
+        <version>${version.spring}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-aspects</artifactId>
+        <version>${version.spring}</version>
+      </dependency>
+      <dependency>
+        <groupId>org.springframework</groupId>
+        <artifactId>spring-test</artifactId>
+        <version>${version.spring}</version>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
+        <groupId>com.google.guava</groupId>
+        <artifactId>guava</artifactId>
+        <version>${version.guava}</version>
+      </dependency>
+    </dependencies>
+  </dependencyManagement>
+
+  <licenses>
+    <license>
+      <name>The Apache Software License, Version 2.0</name>
+      <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+    </license>
+  </licenses>
+
+  <repositories>
+    <repository>
+      <id>camunda-bpm</id>
+      <url>https://app.camunda.com/nexus/content/groups/public/</url>
+      <releases>
+        <enabled>true</enabled>
+      </releases>
+      <snapshots>
+        <enabled>true</enabled>
+      </snapshots>
+    </repository>
+  </repositories>
+
+</project>

@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright 2013 - Christian Lipphardt and camunda services GmbH
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<module xmlns="urn:jboss:module:1.0" name="org.camunda.bpm.elasticsearch">
+  <resources>
+    <resource-root path="elasticsearch-engine-integration-${project.version}.jar" />
+
+    <resource-root path="elasticsearch-${version.elasticsearch}.jar" />
+    <resource-root path="lucene-analyzers-common-${version.lucene}.jar" />
+    <resource-root path="lucene-codecs-${version.lucene}.jar" />
+    <resource-root path="lucene-core-${version.lucene}.jar" />
+    <resource-root path="lucene-grouping-${version.lucene}.jar" />
+    <resource-root path="lucene-highlighter-${version.lucene}.jar" />
+    <resource-root path="lucene-join-${version.lucene}.jar" />
+    <resource-root path="lucene-memory-${version.lucene}.jar" />
+    <resource-root path="lucene-misc-${version.lucene}.jar" />
+    <resource-root path="lucene-queries-${version.lucene}.jar" />
+    <resource-root path="lucene-queryparser-${version.lucene}.jar" />
+    <resource-root path="lucene-sandbox-${version.lucene}.jar" />
+    <resource-root path="lucene-spatial-${version.lucene}.jar" />
+    <resource-root path="lucene-suggest-${version.lucene}.jar" />
+    <resource-root path="spatial4j-0.3.jar" />
+
+    <resource-root path="jackson-annotations-${version.jackson}.jar" />
+    <resource-root path="jackson-core-${version.jackson}.jar" />
+    <resource-root path="jackson-databind-${version.jackson}.jar" />
+
+    <resource-root path="guava-${version.guava}.jar" />
+  </resources>
+
+  <dependencies>
+    <module name="org.camunda.bpm.camunda-engine" />
+    <module name="sun.jdk" />
+  </dependencies>
+</module>

@@ -1,0 +1,73 @@
+/*
+ * Copyright 2013 - Christian Lipphardt and camunda services GmbH
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *    http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.camunda.bpm.elasticsearch;
+
+import org.apache.activemq.ActiveMQConnectionFactory;
+import org.apache.activemq.broker.BrokerService;
+import org.apache.activemq.broker.TransportConnector;
+import org.apache.activemq.broker.region.policy.PolicyEntry;
+import org.apache.activemq.broker.region.policy.PolicyMap;
+import org.junit.After;
+import org.junit.Before;
+
+import javax.jms.Connection;
+import java.net.URI;
+
+public class AbstractElasticSearchActiveMQTest { // extends AbstractElasticSearchTest {
+
+  private BrokerService broker;
+  private TransportConnector connector;
+  private Connection connection;
+
+  @Before
+  public void setup() throws Exception {
+    broker = createBroker();
+    connector = new TransportConnector();
+    connector.setUri(new URI("vm://localhost"));
+    broker.addConnector(connector);
+    broker.start();
+
+    ActiveMQConnectionFactory connFactory =
+        new ActiveMQConnectionFactory(connector.getConnectUri() + "?jms.prefetchPolicy.all=1");
+    connection = connFactory.createConnection();
+    connection.start();
+  }
+
+  @After
+  public void tearDown() throws Exception {
+    connector.stop();
+    connection.close();
+    broker.stop();
+  }
+
+  protected BrokerService createBroker() {
+    BrokerService brokerService = new BrokerService();
+    brokerService.setPersistent(false);
+    brokerService.setUseJmx(false);
+
+    PolicyMap policyMap = new PolicyMap();
+    PolicyEntry policy = new PolicyEntry();
+    policy.setConsumersBeforeDispatchStarts(2);
+    policy.setTimeBeforeDispatchStarts(1000);
+    policyMap.setDefaultEntry(policy);
+
+    brokerService.setDestinationPolicy(policyMap);
+
+    return brokerService;
+  }
+
+}

@@ -1,0 +1,62 @@
+{
+  "query": {
+    "filtered": {
+      "query": {
+        "match": {}
+      },
+      "filter": {
+        "bool": {
+          "should": [
+            {
+              "nested": {
+                "path": "variables",
+                "query": {
+                  "query_string": {
+                    "fields": ["variables.*"],
+                    "query": "somebody",
+                    "use_dis_max" : true,
+                    "lenient" : true
+                  }
+                }
+              }
+            },
+            {
+              "nested": {
+                "path": "activities",
+                "query": {
+                  "query_string": {
+                    "fields": ["activities.*"],
+                    "query": "somebody",
+                    "use_dis_max" : true,
+                    "lenient" : true
+                  }
+                }
+              }
+            },
+            {
+              "nested": {
+                "path": "tasks",
+                "query": {
+                  "query_string": {
+                    "fields": ["tasks.*"],
+                    "query": "somebody",
+                    "use_dis_max" : true,
+                    "lenient" : true
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  },
+  "facets" : {
+    "histo1" : {
+      "date_histogram" : {
+        "key_field" : "endTime",
+        "interval" : "day"
+      }
+    }
+  }
+}

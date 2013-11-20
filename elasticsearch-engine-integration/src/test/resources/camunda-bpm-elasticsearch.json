@@ -1,0 +1,15 @@
+{
+  "index": "camundabpm",
+  "type": "processinstance",
+  "indexingStrategy": "org.camunda.bpm.elasticsearch.index.ElasticSearchDefaultIndexStrategy",
+  "esHost": "localhost",
+  "esPort": "9300",
+  "esClusterName": "elasticsearch-test-cluster",
+  "transportClient": false,
+  "properties": {
+    "es.node.local" : true,
+    "es.network.host" : "_local_",
+    "es.path.logs" : "${es.path.logs}",
+    "es.path.data" : "${es.path.data}"
+  }
+}

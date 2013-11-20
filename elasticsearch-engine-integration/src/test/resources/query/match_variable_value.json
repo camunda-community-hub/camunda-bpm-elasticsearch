@@ -1,0 +1,12 @@
+{
+  "query": {
+    "nested": {
+      "path": "variables",
+      "query": {
+        "match": {
+          "variables.textValue": "somebody"
+        }
+      }
+    }
+  }
+}

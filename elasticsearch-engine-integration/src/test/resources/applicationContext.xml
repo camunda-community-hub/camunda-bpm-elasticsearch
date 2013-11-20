@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2013 - Christian Lipphardt and camunda services GmbH
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~    http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:context="http://www.springframework.org/schema/context"
+       xmlns:int="http://www.springframework.org/schema/integration"
+       xmlns:int-jms="http://www.springframework.org/schema/integration/jms"
+       xmlns:util="http://www.springframework.org/schema/util" xmlns:task="http://www.springframework.org/schema/task"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.1.xsd
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.1.xsd
+    http://www.springframework.org/schema/integration/jms http://www.springframework.org/schema/integration/jms/spring-integration-jms-2.2.xsd
+	http://www.springframework.org/schema/integration http://www.springframework.org/schema/integration/spring-integration-2.2.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.1.xsd
+    http://www.springframework.org/schema/task http://www.springframework.org/schema/task/spring-task.xsd">
+
+  <context:annotation-config />
+  <context:component-scan base-package="org.camunda.bpm.elasticsearch" />
+
+  <!-- ======================================== -->
+  <!-- ActiveMQ CONFIG. -->
+  <!-- ======================================== -->
+  <bean id="jmsConnectionFactory" class="org.apache.activemq.ActiveMQConnectionFactory">
+    <property name="brokerURL">
+      <value>vm://localhost</value> <!-- tcp://localhost:61616 -->
+    </property>
+  </bean>
+
+  <!-- ======================================== -->
+  <!-- Spring Integration. -->
+  <!-- ======================================== -->
+  <!-- Simple channel to which each individual indexing request is written out to. -->
+  <int-jms:channel id="indexerChannel" queue-name="indexChannel"
+                   connection-factory="jmsConnectionFactory" auto-startup="true"
+                   concurrency="10">
+  </int-jms:channel>
+
+  <!-- Results of the aggregation of a set of messages is written to this channel. -->
+  <int-jms:channel id="aggregatorOutputChannel"
+                   queue-name="aggregatorOutChannel" connection-factory="jmsConnectionFactory"
+                   auto-startup="true" concurrency="10">
+  </int-jms:channel>
+
+  <!-- Aggregates individual messages based in the input channel and the release strategy.
+    Writes out the aggregated messages to an output channel. -->
+  <int:aggregator id="messageAggregator" ref="messageAggregatorBean"
+                  method="aggregate" input-channel="indexChannel" output-channel="aggregatorOutputChannel"
+                  release-strategy="messageReleaseStrategyBean" release-strategy-method="canRelease"
+                  send-partial-result-on-expiry="true" message-store="resultMessageStore">
+  </int:aggregator>
+
+  <!-- Receives an aggregated set of messages to bulk index into ElasticSearch. -->
+  <int:service-activator id="contributionIndexerService"
+                         ref="contributionIndexerBean" method="bulkIndex" input-channel="aggregatorOutChannel" />
+
+  <!-- In-memory message store. Can instead be written out to database via jdbc or to mongodb -->
+  <bean id="resultMessageStore"
+        class="org.springframework.integration.store.SimpleMessageStore" />
+
+  <!-- This configuration periodically -->
+  <bean id="resultMessageStoreReaper"
+        class="org.springframework.integration.store.MessageGroupStoreReaper">
+    <property name="messageGroupStore" ref="resultMessageStore" />
+    <property name="timeout" value="60000" />
+  </bean>
+
+  <task:scheduled-tasks>
+    <task:scheduled ref="resultMessageStoreReaper" method="run"
+                    fixed-rate="10000" />
+  </task:scheduled-tasks>
+</beans>

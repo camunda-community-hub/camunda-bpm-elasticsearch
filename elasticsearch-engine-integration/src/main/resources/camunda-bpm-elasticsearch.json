@@ -1,0 +1,9 @@
+{
+  "index": "camundabpm",
+  "type": "processinstance",
+  "indexingStrategy": "org.camunda.bpm.elasticsearch.index.ElasticSearchDefaultIndexStrategy",
+  "esHost": "localhost",
+  "esPort": "9300",
+  "transportClient": false,
+  "properties": {}
+}

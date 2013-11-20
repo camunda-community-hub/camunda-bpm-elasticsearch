@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="camunda-bpm-elasticsearch" default="deploy.distro">
+	<property name="skipTests" value="true" />
+
+  <!-- maybe check JBOSS_HOME env var and check for existance of directory -->
+
+  <property name="version.camunda-bpm" value="7.0.0-Final" />
+
+  <property name="servertype" value="jboss" /> <!-- or tomcat -->
+
+  <property name="version.tomcat" value="7.0.33" />
+  <property name="version.jboss" value="7.1.3.Final" />
+
+  <property name="distro.file" value="camunda-bpm-${servertype}-${version.camunda-bpm}.tar.gz" />
+  <property name="distro.url" value="http://camunda.org/release/camunda-bpm/${servertype}/7.0/${distro.file}" />
+
+  <property name="deploy.dir" value="${basedir}/distro" />
+  <!--<property name="deploy.jboss.dir" value="/home/hawky4s/projects/own/camunda-jboss/server/jboss-as-7.2.0.Final" />-->
+
+  <condition property="server.dir" value="server/jboss-as-${version.jboss}" else="server/apache-tomcat-${version.tomcat}">
+    <equals arg1="${servertype}" arg2="jboss" casesensitive="false" forcestring="true" trim="true" />
+  </condition>
+
+	<condition property="mvn.executable" value="mvn.bat" else="mvn">
+    <os family="windows"/>
+  </condition>
+
+
+	<target name="package.mvn" unless="skip">
+	    <exec executable="${mvn.executable}" dir="${basedir}" failonerror="true">
+	      <env key="MAVEN_OPTS" value="-Xmx1024m -Xms512m"/>
+	      <arg line="clean package -DskipTests=${skipTests}" />
+	    </exec>
+	</target>
+
+  <target name="download.distro">
+    <mkdir dir="${deploy.dir}/${servertype}" />
+    <get src="${distro.url}" dest="${deploy.dir}/" verbose="false" skipexisting="true" />
+  </target>
+
+  <target name="unpack.distro" depends="download.distro">
+    <untar src="${deploy.dir}/${distro.file}" dest="${deploy.dir}/${servertype}/" compression="gzip" overwrite="false">
+      <patternset>
+        <include name="**/server" />
+      </patternset>
+    </untar>
+  </target>
+
+	<target name="deploy.distro" depends="package.mvn, unpack.distro">
+		<copy todir="${deploy.dir}/${servertype}/${server.dir}" overwrite="true">
+			<fileset dir="${basedir}/elasticsearch-jboss-module/target">
+				<include name="modules/**/*" />
+        <include name="standalone/**/*" />
+			</fileset>
+		</copy>
+	</target>
+</project>

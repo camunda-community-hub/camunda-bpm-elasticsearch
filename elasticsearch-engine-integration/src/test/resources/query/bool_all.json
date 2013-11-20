@@ -1,0 +1,54 @@
+{
+  "query": {
+    "filtered": {
+      "query": {
+        "match_all": {}
+      },
+      "filter": {
+        "bool": {
+          "should": [
+            {
+              "nested": {
+                "path": "variables",
+                "query": {
+                  "query_string": {
+                    "fields": ["variables.*"],
+                    "query": "$myValue",
+                    "use_dis_max" : true,
+                    "lenient" : true
+                  }
+                }
+              }
+            },
+            {
+              "nested": {
+                "path": "activities",
+                "query": {
+                  "query_string": {
+                    "fields": ["activities.*"],
+                    "query": "$myValue",
+                    "use_dis_max" : true,
+                    "lenient" : true
+                  }
+                }
+              }
+            },
+            {
+              "nested": {
+                "path": "tasks",
+                "query": {
+                  "query_string": {
+                    "fields": ["tasks.*"],
+                    "query": "$myValue",
+                    "use_dis_max" : true,
+                    "lenient" : true
+                  }
+                }
+              }
+            }
+          ]
+        }
+      }
+    }
+  }
+}

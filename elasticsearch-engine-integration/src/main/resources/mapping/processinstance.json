@@ -1,0 +1,160 @@
+{
+  "processinstance" : {
+    "dynamic_templates": [
+      {
+        "id_fields_template": {
+          "match": "id",
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+      },
+      {
+        "id_fields_template": {
+          "match": "*Id",
+          "match_mapping_type": "string",
+          "mapping": {
+            "type": "string",
+            "index": "not_analyzed"
+          }
+        }
+      },
+      {
+        "key_fields_template": {
+          "match_mapping_type": "string",
+          "match": "*Key",
+          "mapping": {
+            "type": "multi_field",
+            "fields": {
+              "{name}": {
+                "type": "{dynamic_type}", "index": "analyzed"
+              },
+              "raw": {
+                "type": "{dynamic_type}", "index": "not_analyzed"
+              }
+            }
+          }
+        }
+      },
+      {
+        "key_fields_template": {
+          "match_mapping_type": "string",
+          "match": "*Name",
+          "mapping": {
+            "type": "multi_field",
+            "fields": {
+              "{name}": {
+                "type": "{dynamic_type}", "index": "analyzed"
+              },
+              "raw": {
+                "type": "{dynamic_type}", "index": "not_analyzed"
+              }
+            }
+          }
+        }
+      },
+      {
+        "time_fields_template": {
+          "match_mapping_type": "long",
+          "match": "*Time",
+          "mapping": {
+            "type": "date"
+          }
+        }
+      },
+      {
+        "timestap_field_template": {
+          "match_mapping_type": "long",
+          "match": "timestamp",
+          "mapping": {
+            "type": "date"
+          }
+        }
+      }
+    ],
+    "properties": {
+
+      "id": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "processInstanceId": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "executionId": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "processDefinitionId": {
+        "type": "multi_field",
+        "fields": {
+          "processDefinitionId": { "type": "string", "index": "not_analyzed" },
+          "analyzed": { "type": "string", "index": "analyzed" }
+        }
+      },
+      "eventType": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+
+
+      "businessKey": {
+        "type": "multi_field",
+        "fields": {
+          "businessKey": { "type": "string", "index": "analyzed" },
+          "raw": { "type": "string", "index": "not_analyzed" }
+        }
+      },
+      "startUserId": {
+        "type": "multi_field",
+        "fields": {
+          "startUserId": { "type": "string", "index": "analyzed" },
+          "raw": { "type": "string", "index": "not_analyzed" }
+        }
+      },
+      "superProcessInstanceId": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "deleteReason": {
+        "type": "multi_field",
+        "fields": {
+          "deleteReason": { "type": "string", "index": "analyzed" },
+          "raw": { "type": "string", "index": "not_analyzed" }
+        }
+      },
+      "startTime": {
+        "type": "date"
+      },
+      "endTime": {
+        "type": "date"
+      },
+      "durationInMillis": {
+        "type": "long"
+      },
+      "startActivityId": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+      "endActivityId": {
+        "type": "string",
+        "index": "not_analyzed"
+      },
+
+
+      "activities": {
+        "type": "nested"
+      },
+      "tasks": {
+        "type": "nested"
+      },
+      "variables": {
+        "type": "nested"
+      }
+
+    }
+  }
+}

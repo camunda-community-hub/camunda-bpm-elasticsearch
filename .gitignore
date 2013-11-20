@@ -4,3 +4,11 @@
 *.jar
 *.war
 *.ear
+
+# IntelliJ files #
+.idea
+*.iml
+
+# Generated folders #
+distro
+target

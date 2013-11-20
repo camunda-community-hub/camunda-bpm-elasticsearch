@@ -1,0 +1,6 @@
+node.local : true
+node.client : false
+node.data : true
+node.http.enabled : true
+discovery.zen.ping.multicast.enabled : false
+network.host : _local_
