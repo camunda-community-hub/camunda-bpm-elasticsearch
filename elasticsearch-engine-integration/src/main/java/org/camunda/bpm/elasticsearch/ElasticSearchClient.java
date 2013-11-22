@@ -39,10 +39,10 @@ public class ElasticSearchClient {
 
   public ElasticSearchClient(ElasticSearchHistoryPluginConfiguration historyPluginConfiguration) {
     this.historyPluginConfiguration = historyPluginConfiguration;
-    create();
+    init();
   }
 
-  protected Client create() {
+  protected Client init() {
     // network.host : 10.0.0.4  // bind to which host
     // path.logs : /var/log/elasticsearch
     // path.data : /var/data/elasticsearch
@@ -63,16 +63,17 @@ public class ElasticSearchClient {
     } else {
       if (esNode == null) {
         settingsBuilder.put("node.name", "rocking-camunda-bpm-history")
+            .put("node.client", true) // make node a client, so it won't become a master
             .put("node.local", false)
             .put("node.data", false)
-            .put("node.http.enabled", true)
-            .put("discovery.zen.ping.multicast.enabled", false)
-            .put("discovery.zen.ping.unicast.hosts", "127.0.0.1:9300");
+            .put("node.http.enabled", true);
+//            .put("discovery.zen.ping.multicast.enabled", false)
+//            .put("discovery.zen.ping.unicast.hosts", "127.0.0.1:9300");
 
         addCustomESProperties(settingsBuilder, historyPluginConfiguration.getProperties());
 
         esNode = NodeBuilder.nodeBuilder()
-            .loadConfigSettings(false)
+            .loadConfigSettings(true)
             .settings(settingsBuilder)
             .build();
 
@@ -100,7 +101,7 @@ public class ElasticSearchClient {
 
   public Client get() {
     if (esClient == null) {
-      esClient = create();
+      esClient = init();
     }
     return esClient;
   }

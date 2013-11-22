@@ -55,8 +55,8 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
     try {
       UpdateRequestBuilder updateRequestBuilder = prepareUpdateRequest(historyEvent);
 
-      if (LOGGER.isLoggable(Level.INFO)) {
-        LOGGER.info(ElasticSearchHelper.convertRequestToJson(updateRequestBuilder.request()));
+      if (LOGGER.isLoggable(Level.FINE)) {
+        LOGGER.fine(ElasticSearchHelper.convertRequestToJson(updateRequestBuilder.request()));
       }
 
       UpdateResponse updateResponse;
@@ -90,8 +90,8 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
     if (historyEvent instanceof HistoricProcessInstanceEventEntity) {
       prepareHistoricProcessInstanceEventUpdate(historyEvent, updateRequestBuilder);
     } else if (historyEvent instanceof HistoricActivityInstanceEventEntity ||
-        historyEvent instanceof HistoricTaskInstanceEventEntity ||
-        historyEvent instanceof HistoricVariableUpdateEventEntity) {
+               historyEvent instanceof HistoricTaskInstanceEventEntity ||
+               historyEvent instanceof HistoricVariableUpdateEventEntity) {
       updateRequestBuilder = prepareOtherHistoricEventsUpdateRequest(historyEvent, updateRequestBuilder);
     } else {
       // unknown event - insert...

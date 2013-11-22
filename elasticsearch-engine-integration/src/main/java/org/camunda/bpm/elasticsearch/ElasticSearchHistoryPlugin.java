@@ -17,7 +17,6 @@
 package org.camunda.bpm.elasticsearch;
 
 import org.camunda.bpm.elasticsearch.handler.AbstractElasticSearchHistoryEventHandler;
-import org.camunda.bpm.elasticsearch.handler.ElasticSearchTransactionAwareHistoryEventHandler;
 import org.camunda.bpm.elasticsearch.index.ElasticSearchIndexStrategy;
 import org.camunda.bpm.elasticsearch.util.ClassUtil;
 import org.camunda.bpm.elasticsearch.util.ElasticSearchHelper;
@@ -42,24 +41,25 @@ public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
     // retrieve indexing strategy
     Class<? extends ElasticSearchIndexStrategy> indexingStrategyClass =
         ClassUtil.loadClass(historyPluginConfiguration.getIndexingStrategy(), null, ElasticSearchIndexStrategy.class);
-    ElasticSearchIndexStrategy elasticSearchIndexStrategy = ClassUtil.createInstance(indexingStrategyClass);
+    ElasticSearchIndexStrategy indexingStrategy = ClassUtil.createInstance(indexingStrategyClass);
 
     elasticSearchClient = new ElasticSearchClient(historyPluginConfiguration);
-    elasticSearchIndexStrategy.setEsClient(elasticSearchClient.get());
+    indexingStrategy.setEsClient(elasticSearchClient.get());
 
     Class<? extends AbstractElasticSearchHistoryEventHandler> historyEventHandlerClass =
         ClassUtil.loadClass(historyPluginConfiguration.getEventHandler(), null, AbstractElasticSearchHistoryEventHandler.class);
-
-    historyEventHandler = new ElasticSearchTransactionAwareHistoryEventHandler(historyPluginConfiguration, elasticSearchIndexStrategy);
-    processEngineConfiguration.setHistoryEventHandler(historyEventHandler);
+    historyEventHandler = ClassUtil.createInstance(historyEventHandlerClass);
+    historyEventHandler.setIndexingStrategy(indexingStrategy);
+    historyEventHandler.setProcessEngineConfiguration(processEngineConfiguration);
 
     ElasticSearchHelper.checkIndex(elasticSearchClient.get(), historyPluginConfiguration.getIndex());
     ElasticSearchHelper.checkTypeAndMapping(elasticSearchClient.get(), historyPluginConfiguration.getIndex(), historyPluginConfiguration.getType());
+
+    processEngineConfiguration.setHistoryEventHandler(historyEventHandler);
   }
 
   @Override
   public void postInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
-    historyEventHandler.setProcessEngineConfiguration(processEngineConfiguration);
   }
 
   @Override

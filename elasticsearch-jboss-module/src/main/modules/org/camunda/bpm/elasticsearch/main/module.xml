@@ -42,7 +42,8 @@
   </resources>
 
   <dependencies>
+    <module name="javax.api" />
     <module name="org.camunda.bpm.camunda-engine" />
-    <module name="sun.jdk" />
+    <!--module name="sun.jdk" /-->
   </dependencies>
 </module>

@@ -16,8 +16,6 @@
 
 package org.camunda.bpm.elasticsearch.handler;
 
-import org.camunda.bpm.elasticsearch.ElasticSearchHistoryPluginConfiguration;
-import org.camunda.bpm.elasticsearch.index.ElasticSearchIndexStrategy;
 import org.camunda.bpm.engine.impl.cfg.TransactionContext;
 import org.camunda.bpm.engine.impl.cfg.TransactionState;
 import org.camunda.bpm.engine.impl.context.Context;
@@ -27,13 +25,7 @@ import java.util.HashMap;
 
 public class ElasticSearchTransactionAwareHistoryEventHandler extends AbstractElasticSearchHistoryEventHandler {
 
-  protected HashMap<TransactionContext, ElasticSearchEngineTransactionListener> transactionListeners;
-
-  public ElasticSearchTransactionAwareHistoryEventHandler(ElasticSearchHistoryPluginConfiguration historyPluginConfiguration,
-                                                          ElasticSearchIndexStrategy indexingStrategy) {
-    super(indexingStrategy, historyPluginConfiguration);
-    this.transactionListeners = new HashMap<TransactionContext, ElasticSearchEngineTransactionListener>();
-  }
+  protected HashMap<TransactionContext, ElasticSearchEngineTransactionListener> transactionListeners = new HashMap<TransactionContext, ElasticSearchEngineTransactionListener>();
 
   @Override
   public void handleEvent(HistoryEvent historyEvent) {

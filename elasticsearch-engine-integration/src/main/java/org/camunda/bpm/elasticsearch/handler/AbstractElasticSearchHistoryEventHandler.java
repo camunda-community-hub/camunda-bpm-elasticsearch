@@ -32,16 +32,15 @@ public abstract class AbstractElasticSearchHistoryEventHandler implements Histor
   protected ElasticSearchIndexStrategy indexingStrategy;
   protected ProcessEngineConfigurationImpl processEngineConfiguration;
 
-  public AbstractElasticSearchHistoryEventHandler(ElasticSearchIndexStrategy indexingStrategy, ElasticSearchHistoryPluginConfiguration historyPluginConfiguration) {
-    this.indexingStrategy = indexingStrategy;
-    this.historyPluginConfiguration = historyPluginConfiguration;
-  }
-
   @Override
   public abstract void handleEvent(HistoryEvent historyEvent);
 
   public ElasticSearchIndexStrategy getIndexingStrategy() {
     return indexingStrategy;
+  }
+
+  public void setIndexingStrategy(ElasticSearchIndexStrategy indexingStrategy) {
+    this.indexingStrategy = indexingStrategy;
   }
 
   public void setProcessEngineConfiguration(ProcessEngineConfigurationImpl processEngineConfiguration) {

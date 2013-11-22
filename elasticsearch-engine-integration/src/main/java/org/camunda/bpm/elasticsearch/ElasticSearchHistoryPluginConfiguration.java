@@ -107,6 +107,9 @@ public class ElasticSearchHistoryPluginConfiguration {
   }
 
   public String getEsClusterName() {
+    if (esClusterName == null) {
+      esClusterName = ES_DEFAULT_CLUSTER_NAME;
+    }
     return esClusterName;
   }
 
