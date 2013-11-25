@@ -39,7 +39,7 @@ public class ElasticSearchClient {
 
   public ElasticSearchClient(ElasticSearchHistoryPluginConfiguration historyPluginConfiguration) {
     this.historyPluginConfiguration = historyPluginConfiguration;
-    init();
+    this.esClient = init();
   }
 
   protected Client init() {
