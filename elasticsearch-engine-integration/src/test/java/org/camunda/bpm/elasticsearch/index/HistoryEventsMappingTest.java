@@ -1,7 +1,7 @@
 package org.camunda.bpm.elasticsearch.index;
 
-import com.github.tlrx.elasticsearch.test.support.junit.runners.ElasticsearchRunner;
 import org.camunda.bpm.elasticsearch.AbstractElasticSearchTest;
+import org.camunda.bpm.elasticsearch.ProcessDataContainer;
 import org.camunda.bpm.elasticsearch.TestDataGenerator;
 import org.camunda.bpm.elasticsearch.util.IoUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
@@ -11,7 +11,6 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
 import org.junit.Test;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -23,12 +22,12 @@ import static org.camunda.bpm.elasticsearch.ElasticSearchHistoryPluginConfigurat
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-@RunWith(ElasticsearchRunner.class)
+//@RunWith(ElasticsearchRunner.class)
 public class HistoryEventsMappingTest extends AbstractElasticSearchTest {
 
   @Test
   public void testIndexingSingleInvoice() throws IOException {
-    HashMap<String,HashMap<String,Object>> variablesByProcessIds = TestDataGenerator.startInvoiceProcess(processEngineRule.getProcessEngine(), 1);
+    HashMap<String,ProcessDataContainer> variablesByProcessIds = TestDataGenerator.startInvoiceProcess(processEngineRule.getProcessEngine(), 1);
 
     String[] pids = variablesByProcessIds.keySet().toArray(new String[0]);
 

@@ -21,8 +21,10 @@ import org.camunda.bpm.engine.RepositoryService;
 import org.camunda.bpm.engine.RuntimeService;
 import org.camunda.bpm.engine.TaskService;
 import org.camunda.bpm.engine.impl.test.ProcessEngineAssert;
+import org.camunda.bpm.engine.impl.util.ClockUtil;
 import org.camunda.bpm.engine.repository.Deployment;
 import org.camunda.bpm.engine.runtime.ProcessInstance;
+import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.elasticsearch.common.base.Charsets;
 import org.elasticsearch.common.util.concurrent.jsr166y.ThreadLocalRandom;
@@ -32,6 +34,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -42,6 +45,7 @@ import static org.junit.Assert.assertEquals;
 public class TestDataGenerator {
 
   private static final Logger LOGGER = Logger.getLogger(TestDataGenerator.class.getName());
+  private static final Random RANDOM = new Random();
 
   public static String getRandomString() {
     URL names = TestDataGenerator.class.getClassLoader().getResource("data/names.txt");
@@ -49,11 +53,11 @@ public class TestDataGenerator {
   }
 
   public static Double getRandomDouble() {
-    return new Random().nextDouble() * 1000;
+    return RANDOM.nextDouble() * 1000;
   }
 
   public static Long getRandomLong() {
-    return new Random().nextLong();
+    return RANDOM.nextLong();
   }
 
   public static String randomString(URL nodeNames) {
@@ -84,11 +88,11 @@ public class TestDataGenerator {
     }
   }
 
-  public static HashMap<String, HashMap<String, Object>> startInvoiceProcess(ProcessEngine processEngine, final int numberOfInstances) {
+  public static HashMap<String, ProcessDataContainer> startInvoiceProcess(ProcessEngine processEngine, final int numberOfInstances) {
     return startInvoiceProcess(processEngine, numberOfInstances, false);
   }
 
-  public static HashMap<String, HashMap<String, Object>> startInvoiceProcess(ProcessEngine processEngine, final int numberOfInstances, boolean addRandomTimeInterval) {
+  public static HashMap<String, ProcessDataContainer> startInvoiceProcess(ProcessEngine processEngine, final int numberOfInstances, boolean addRandomTimeInterval) {
     RepositoryService repositoryService = processEngine.getRepositoryService();
     RuntimeService runtimeService = processEngine.getRuntimeService();
     TaskService taskService = processEngine.getTaskService();
@@ -97,9 +101,15 @@ public class TestDataGenerator {
     Assert.assertNotNull(repositoryService.createDeploymentQuery().deploymentId(deployment.getId()).singleResult());
 
     LOGGER.info("Creating " + numberOfInstances + " instances of 'invoice.bpmn' process.");
-    HashMap<String, HashMap<String, Object>> variablesByProcessIds = new HashMap<String, HashMap<String, Object>>(numberOfInstances);
+
+
+    HashMap<String, ProcessDataContainer> variablesByProcessIds = new HashMap<String, ProcessDataContainer>(numberOfInstances);
 
     for (int i = 0; i < numberOfInstances; i++) {
+      if (addRandomTimeInterval) {
+        ClockUtil.setCurrentTime(new Date(ClockUtil.getCurrentTime().getTime() + getRandomLong()));
+      }
+
       HashMap<String, Object> variables = new HashMap<String, Object>();
       variables.put(TestDataGenerator.getRandomString(), TestDataGenerator.getRandomString());
       variables.put("long", TestDataGenerator.getRandomLong());
@@ -130,12 +140,13 @@ public class TestDataGenerator {
 
       tasks = taskService.createTaskQuery().processInstanceId(pi.getId()).list();
 
+      // retrieve all variables
+      List<VariableInstance> variableInstances = runtimeService.createVariableInstanceQuery().processInstanceIdIn(pi.getProcessInstanceId()).list();
+      variablesByProcessIds.put(pi.getProcessInstanceId(), new ProcessDataContainer(pi.getProcessInstanceId(), pi.getBusinessKey(), variableInstances));
+
       assertEquals(1, tasks.size());
       assertEquals("prepareBankTransfer", tasks.get(0).getTaskDefinitionKey());
       taskService.complete(tasks.get(0).getId());
-
-      variables.put("approver", approver);
-      variablesByProcessIds.put(pi.getProcessInstanceId(), variables);
 
       ProcessEngineAssert.assertProcessEnded(processEngine, pi.getId());
     }
