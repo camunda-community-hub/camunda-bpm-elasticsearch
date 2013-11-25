@@ -2,15 +2,32 @@
 <project name="camunda-bpm-elasticsearch" default="deploy.to.tomcat.lib">
 	<property name="skipTests" value="true" />
 
+  <condition property="mvn.executable" value="mvn.bat" else="mvn">
+    <os family="windows"/>
+  </condition>
+
+  <condition property="windowsos">
+    <os family="windows" />
+  </condition>
+
+  <condition property="linuxos">
+    <os family="unix" />
+  </condition>
+
+  <condition property="archive.type" value="zip" else="tar.gz">
+    <os family="windows"/>
+  </condition>
   <!-- maybe check JBOSS_HOME env var and check for existance of directory -->
 
   <property name="version.camunda-bpm" value="7.0.0-Final" />
-
-  <property name="distro" value="jboss" /> <!-- or tomcat -->
-
   <property name="version.tomcat" value="7.0.33" />
   <property name="version.jboss" value="7.1.3.Final" />
+  <property name="version.elasticsearch" value="0.90.7" />
+  <property name="elasticsearch.file" value="elasticsearch-${version.elasticsearch}.${archive.type}" />
+  <property name="elasticsearch.url" value="https://download.elasticsearch.org/elasticsearch/elasticsearch/${elasticsearch.file}" />
 
+  <property name="distro.type" value="jboss" /> <!-- or tomcat -->
+  <property name="distro" value="camunda-${distro.type}" />
   <property name="distro.file" value="camunda-bpm-${distro}-${version.camunda-bpm}.tar.gz" />
   <property name="distro.url" value="http://camunda.org/release/camunda-bpm/${distro}/7.0/${distro.file}" />
 
@@ -19,10 +36,6 @@
 
   <condition property="server.dir" value="server/jboss-as-${version.jboss}" else="server/apache-tomcat-${version.tomcat}">
     <equals arg1="${distro}" arg2="jboss" casesensitive="false" forcestring="true" trim="true" />
-  </condition>
-
-	<condition property="mvn.executable" value="mvn.bat" else="mvn">
-    <os family="windows"/>
   </condition>
 
 
@@ -34,11 +47,11 @@
 	</target>
 
   <target name="download.distro">
-    <mkdir dir="${deploy.dir}/${distro}" />
     <get src="${distro.url}" dest="${deploy.dir}/" verbose="false" skipexisting="true" />
   </target>
 
   <target name="unpack.distro" depends="download.distro">
+    <mkdir dir="${deploy.dir}/${distro}" />
     <untar src="${deploy.dir}/${distro.file}" dest="${deploy.dir}/${distro}/" compression="gzip" overwrite="false" >
       <patternset>
         <include name="**/server/**/*" />
@@ -62,4 +75,29 @@
       </fileset>
     </copy>
   </target>
+
+  <target name="download.elasticsearch">
+    <get src="${elasticsearch.url}" dest="${deploy.dir}/" verbose="false" skipexisting="true" />
+  </target>
+
+  <target name="unpack.elasticsearch.unix" if="linuxos">
+    <untar src="${deploy.dir}/${elasticsearch.file}" dest="${deploy.dir}/" compression="gzip" overwrite="false" />
+  </target>
+
+  <target name="unpack.elasticsearch.win" if="windowsos">
+    <unzip src="${deploy.dir}/${elasticsearch.file}" dest="${deploy.dir}/" overwrite="false" />
+  </target>
+
+  <target name="unpack.elasticsearch" depends="download.elasticsearch, unpack.elasticsearch.unix, unpack.elasticsearch.win" />
+
+  <!--
+  plugins:
+
+  twitter:  bin/plugin -install elasticsearch/elasticsearch-river-twitter/1.4.0  - see https://github.com/elasticsearch/elasticsearch-river-twitter
+
+  bigdesk:  bin/plugin -install lukas-vlcek/bigdesk - see bigdesk.org
+  head:     bin/plugin -install mobz/elasticsearch-head - see https://github.com/mobz/elasticsearch-head
+  inquisitor: bin/plugin -install polyfractal/elasticsearch-inquisitor - see https://github.com/polyfractal/elasticsearch-inquisitor / http://localhost:9200/_plugin/inquisitor/
+
+  -->
 </project>
