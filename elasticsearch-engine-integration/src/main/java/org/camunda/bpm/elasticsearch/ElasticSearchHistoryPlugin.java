@@ -17,6 +17,8 @@
 package org.camunda.bpm.elasticsearch;
 
 import org.camunda.bpm.elasticsearch.handler.AbstractElasticSearchHistoryEventHandler;
+import org.camunda.bpm.elasticsearch.handler.ElasticSearchTransactionAwareHistoryEventHandler;
+import org.camunda.bpm.elasticsearch.index.ElasticSearchDefaultIndexStrategy;
 import org.camunda.bpm.elasticsearch.index.ElasticSearchIndexStrategy;
 import org.camunda.bpm.elasticsearch.util.ClassUtil;
 import org.camunda.bpm.elasticsearch.util.ElasticSearchHelper;
@@ -29,6 +31,9 @@ import java.util.logging.Logger;
 public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
 
   protected static final Logger LOGGER = Logger.getLogger(ElasticSearchHistoryPlugin.class.getName());
+
+  public static final String ES_DEFAULT_HISTORY_EVENT_HANDLER = ElasticSearchTransactionAwareHistoryEventHandler.class.getName();
+  public static final String ES_DEFAULT_HISTORY_INDEXING_STRATEGY = ElasticSearchDefaultIndexStrategy.class.getName();
 
   protected AbstractElasticSearchHistoryEventHandler historyEventHandler;
   protected ElasticSearchHistoryPluginConfiguration historyPluginConfiguration;
@@ -45,6 +50,10 @@ public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
 
     elasticSearchClient = new ElasticSearchClient(historyPluginConfiguration);
     indexingStrategy.setEsClient(elasticSearchClient.get());
+
+    if (historyPluginConfiguration.getEventHandler() == null) {
+      historyPluginConfiguration.setEventHandler(ES_DEFAULT_HISTORY_EVENT_HANDLER);
+    }
 
     Class<? extends AbstractElasticSearchHistoryEventHandler> historyEventHandlerClass =
         ClassUtil.loadClass(historyPluginConfiguration.getEventHandler(), null, AbstractElasticSearchHistoryEventHandler.class);

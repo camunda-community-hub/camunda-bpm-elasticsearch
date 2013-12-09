@@ -4,7 +4,7 @@ import org.camunda.bpm.cockpit.plugin.elasticsearch.dto.SearchHistoryParamsDto;
 import org.camunda.bpm.cockpit.plugin.resource.AbstractPluginResource;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
-import org.elasticsearch.client.transport.TransportClient;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.NestedFilterBuilder;
@@ -16,13 +16,13 @@ import javax.ws.rs.POST;
 
 public class ElasticSearchHistorySearchResource extends AbstractPluginResource {
 
-  private TransportClient esClient;
+  private Client esClient;
 
   public ElasticSearchHistorySearchResource(String engineName) {
     super(engineName);
   }
 
-  public ElasticSearchHistorySearchResource(TransportClient esClient, String engineName) {
+  public ElasticSearchHistorySearchResource(Client esClient, String engineName) {
     super(engineName);
     this.esClient = esClient;
   }
@@ -64,7 +64,6 @@ public class ElasticSearchHistorySearchResource extends AbstractPluginResource {
         .interval("day");
 
     // facet for running instances
-
 
     // facet for ended instances
 

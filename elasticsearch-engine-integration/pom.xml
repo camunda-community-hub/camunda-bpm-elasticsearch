@@ -35,6 +35,12 @@
 
   <dependencies>
     <dependency>
+      <groupId>org.camunda.bpm.elasticsearch</groupId>
+      <artifactId>elasticsearch-commons</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+
+    <dependency>
       <groupId>org.camunda.bpm</groupId>
       <artifactId>camunda-engine</artifactId>
       <scope>provided</scope>
@@ -58,10 +64,6 @@
       <scope>test</scope>
     </dependency>
 
-    <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
-    </dependency>
     <dependency>
       <groupId>com.github.tlrx</groupId>
       <artifactId>elasticsearch-test</artifactId>

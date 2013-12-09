@@ -27,6 +27,10 @@ public class IoUtil {
 
   public static final Charset DEFAULT_UTF_8_CHARSET = Charset.forName("UTF-8");
 
+  public static void writeToFile(String content, String fileName) {
+    writeToFile(content.getBytes(DEFAULT_UTF_8_CHARSET), fileName, true);
+  }
+
   public static void writeToFile(String content, String fileName, boolean createFile) {
     writeToFile(content.getBytes(DEFAULT_UTF_8_CHARSET), fileName, createFile);
   }

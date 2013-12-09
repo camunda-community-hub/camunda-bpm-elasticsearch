@@ -36,7 +36,7 @@ public class JsonHelper {
     InputStream inputStream = null;
 
     try {
-      inputStream = getResourceAsStream(fileName);
+      inputStream = IoUtil.getResourceAsStream(fileName);
       if (inputStream == null) {
         throw new RuntimeException("File '" + fileName + "' not found!");
       }
@@ -55,7 +55,7 @@ public class JsonHelper {
     InputStream inputStream = null;
 
     try {
-      inputStream = getResourceAsStream(fileName);
+      inputStream = IoUtil.getResourceAsStream(fileName);
       if (inputStream == null) {
         throw new RuntimeException("File '" + fileName + "' not found!");
       }
@@ -75,7 +75,7 @@ public class JsonHelper {
     InputStream inputStream = null;
 
     try {
-      inputStream = getResourceAsStream(fileName);
+      inputStream = IoUtil.getResourceAsStream(fileName);
       if (inputStream == null) {
         throw new RuntimeException("File '" + fileName + "' not found!");
       }

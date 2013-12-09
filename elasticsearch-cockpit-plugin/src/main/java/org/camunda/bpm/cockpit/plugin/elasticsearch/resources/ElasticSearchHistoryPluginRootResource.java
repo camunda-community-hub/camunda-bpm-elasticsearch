@@ -1,19 +1,20 @@
 package org.camunda.bpm.cockpit.plugin.elasticsearch.resources;
 
+import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+
 import org.camunda.bpm.cockpit.plugin.elasticsearch.ElasticSearchHistoryPlugin;
 import org.camunda.bpm.cockpit.plugin.resource.AbstractPluginRootResource;
+import org.elasticsearch.client.Client;
 import org.elasticsearch.client.transport.TransportClient;
 import org.elasticsearch.common.settings.ImmutableSettings;
 import org.elasticsearch.common.settings.Settings;
 import org.elasticsearch.common.transport.InetSocketTransportAddress;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
-
 @Path("plugin/" + ElasticSearchHistoryPlugin.ID)
 public class ElasticSearchHistoryPluginRootResource extends AbstractPluginRootResource {
 
-  private TransportClient esClient;
+  private Client esClient;
 
   public ElasticSearchHistoryPluginRootResource(String pluginName) {
     super(ElasticSearchHistoryPlugin.ID);
@@ -22,6 +23,9 @@ public class ElasticSearchHistoryPluginRootResource extends AbstractPluginRootRe
   }
 
   private void initElasticSearchClient() {
+
+    // reuse elasticsearchconfiguration
+
     if (esClient == null) {
       Settings settings = ImmutableSettings
           .settingsBuilder()

@@ -32,6 +32,7 @@
     <module>elasticsearch-engine-integration</module>
     <module>elasticsearch-jboss-module</module>
     <module>elasticsearch-lib-module</module>
+    <module>elasticsearch-commons</module>
   </modules>
 
   <dependencyManagement>

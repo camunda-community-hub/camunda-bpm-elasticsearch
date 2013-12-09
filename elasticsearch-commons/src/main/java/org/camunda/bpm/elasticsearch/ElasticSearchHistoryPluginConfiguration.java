@@ -16,8 +16,6 @@
 
 package org.camunda.bpm.elasticsearch;
 
-import org.camunda.bpm.elasticsearch.handler.ElasticSearchTransactionAwareHistoryEventHandler;
-import org.camunda.bpm.elasticsearch.index.ElasticSearchDefaultIndexStrategy;
 import org.camunda.bpm.elasticsearch.util.JsonHelper;
 
 import java.util.HashMap;
@@ -25,8 +23,6 @@ import java.util.HashMap;
 public class ElasticSearchHistoryPluginConfiguration {
 
   public static final String ES_CAM_BPM_CONFIGURATION = "camunda-bpm-elasticsearch.json";
-
-  public static final String ES_DEFAULT_HISTORY_EVENT_HANDLER = ElasticSearchTransactionAwareHistoryEventHandler.class.getName();
 
   public static final String ES_DEFAULT_INDEX_NAME_CAMUNDA_BPM = "camundabpm";
   public static final String ES_DEFAULT_TYPE_NAME_CAMUNDA_BPM = "processinstance";
@@ -70,9 +66,6 @@ public class ElasticSearchHistoryPluginConfiguration {
   }
 
   public String getIndexingStrategy() {
-    if (indexingStrategy == null) {
-      indexingStrategy = ElasticSearchDefaultIndexStrategy.class.getName();
-    }
     return indexingStrategy;
   }
 
@@ -134,9 +127,6 @@ public class ElasticSearchHistoryPluginConfiguration {
   }
 
   public String getEventHandler() {
-    if (eventHandler == null) {
-      eventHandler = ES_DEFAULT_HISTORY_EVENT_HANDLER;
-    }
     return eventHandler;
   }
 
@@ -147,4 +137,9 @@ public class ElasticSearchHistoryPluginConfiguration {
   public static ElasticSearchHistoryPluginConfiguration readConfigurationFromClasspath() {
     return JsonHelper.readJsonFromClasspath(ElasticSearchHistoryPluginConfiguration.class, ES_CAM_BPM_CONFIGURATION);
   }
+
+  public static ElasticSearchHistoryPluginConfiguration readConfigurationFromClasspath(String fileName) {
+    return JsonHelper.readJsonFromClasspath(ElasticSearchHistoryPluginConfiguration.class, fileName);
+  }
+
 }
