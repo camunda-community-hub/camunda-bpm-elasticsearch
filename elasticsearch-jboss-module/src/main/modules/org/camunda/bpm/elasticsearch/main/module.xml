@@ -42,8 +42,15 @@
   </resources>
 
   <dependencies>
-    <module name="javax.api" />
     <module name="org.camunda.bpm.camunda-engine" />
-    <!--module name="sun.jdk" /-->
+
+    <module name="sun.jdk" export="true" >
+      <imports>
+        <include path="sun/misc/Unsafe" />
+      </imports>
+    </module>
+    <module name="org.apache.log4j"/>
+    <module name="org.apache.commons.logging"/>
+    <module name="javax.api"/>
   </dependencies>
 </module>
