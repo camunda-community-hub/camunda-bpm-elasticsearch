@@ -21,6 +21,7 @@ import com.google.common.io.Files;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.nio.charset.Charset;
 
 public class IoUtil {
@@ -64,4 +65,31 @@ public class IoUtil {
     return resourceStream;
   }
 
+  /**
+   * Closes the given stream. The same as calling {@link InputStream#close()}, but
+   * errors while closing are silently ignored.
+   */
+  public static void closeSilently(InputStream inputStream) {
+    try {
+      if(inputStream != null) {
+        inputStream.close();
+      }
+    } catch(IOException ignore) {
+      // Exception is silently ignored
+    }
+  }
+
+  /**
+   * Closes the given stream. The same as calling {@link java.io.OutputStream#close()}, but
+   * errors while closing are silently ignored.
+   */
+  public static void closeSilently(OutputStream outputStream) {
+    try {
+      if(outputStream != null) {
+        outputStream.close();
+      }
+    } catch(IOException ignore) {
+      // Exception is silently ignored
+    }
+  }
 }

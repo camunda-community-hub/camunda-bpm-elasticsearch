@@ -26,8 +26,6 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Scanner;
 
-import static org.camunda.bpm.elasticsearch.util.IoUtil.*;
-
 public class JsonHelper {
 
   private static ObjectMapper objectMapper = new ObjectMapper();
@@ -47,7 +45,7 @@ public class JsonHelper {
     } catch (IOException e) {
       throw new RuntimeException("Unable to load json [" + fileName + "] from classpath", e);
     } finally {
-      org.camunda.bpm.engine.impl.util.IoUtil.closeSilently(inputStream);
+      IoUtil.closeSilently(inputStream);
     }
   }
 
@@ -67,7 +65,7 @@ public class JsonHelper {
     } catch (IOException e) {
       throw new RuntimeException("Unable to load json [" + fileName + "] from classpath", e);
     } finally {
-      org.camunda.bpm.engine.impl.util.IoUtil.closeSilently(inputStream);
+      IoUtil.closeSilently(inputStream);
     }
   }
 
@@ -83,7 +81,7 @@ public class JsonHelper {
       Scanner s = new java.util.Scanner(inputStream, "UTF-8").useDelimiter("\\A");
       return s.hasNext() ? s.next() : null;
     } finally {
-      org.camunda.bpm.engine.impl.util.IoUtil.closeSilently(inputStream);
+      IoUtil.closeSilently(inputStream);
     }
   }
 
