@@ -32,5 +32,15 @@ ngDefine('dashboards.pages.processDefinition', [
     });
   }];
 
-  module.config(RouteConfig);
+  var ViewConfig = [ 'ViewsProvider', function(ViewsProvider) {
+    ViewsProvider.registerDefaultView('cockpit.processDefinition.view', {
+      id: 'dashboard',
+      priority: 20,
+      label: 'Dashboard'
+    });
+  }];
+
+  module
+    .config(RouteConfig)
+    .config(ViewConfig);
 });
