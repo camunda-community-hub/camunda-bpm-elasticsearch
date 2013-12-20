@@ -22,7 +22,6 @@ import static org.camunda.bpm.elasticsearch.ElasticSearchHistoryPluginConfigurat
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
-//@RunWith(ElasticsearchRunner.class)
 public class HistoryEventsMappingTest extends AbstractElasticSearchTest {
 
   @Test
