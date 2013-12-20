@@ -5,6 +5,7 @@ ngDefine('elasticsearch.views.processDefinitionDashboard', [
 ], function(module, require) {
 
   module.factory('elasticBackend', [ 'ejsResource', function(ejsResource) {
+    // TODO: configure ejs endpoint
     return ejsResource();
   }]);
 
