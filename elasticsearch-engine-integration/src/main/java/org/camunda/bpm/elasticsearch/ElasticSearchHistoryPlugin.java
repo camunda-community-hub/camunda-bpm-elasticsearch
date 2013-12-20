@@ -39,9 +39,17 @@ public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
   protected ElasticSearchHistoryPluginConfiguration historyPluginConfiguration;
   protected ElasticSearchClient elasticSearchClient;
 
+  protected boolean clientNode = true;
+  protected boolean localNode = false;
+  protected boolean dataNode = false;
+
   @Override
   public void preInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
     historyPluginConfiguration = ElasticSearchHistoryPluginConfiguration.readConfigurationFromClasspath();
+
+    historyPluginConfiguration.getProperties().put("es.node.client", clientNode);
+    historyPluginConfiguration.getProperties().put("es.node.local", localNode);
+    historyPluginConfiguration.getProperties().put("es.node.data", dataNode);
 
     // retrieve indexing strategy
     Class<? extends ElasticSearchIndexStrategy> indexingStrategyClass =
@@ -73,6 +81,31 @@ public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
 
   @Override
   public void postProcessEngineBuild(ProcessEngine processEngine) {
+  }
+
+
+  public boolean isClientNode() {
+    return clientNode;
+  }
+
+  public void setClientNode(boolean clientNode) {
+    this.clientNode = clientNode;
+  }
+
+  public boolean isLocalNode() {
+    return localNode;
+  }
+
+  public void setLocalNode(boolean localNode) {
+    this.localNode = localNode;
+  }
+
+  public boolean isDataNode() {
+    return dataNode;
+  }
+
+  public void setDataNode(boolean dataNode) {
+    this.dataNode = dataNode;
   }
 
 }

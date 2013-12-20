@@ -62,6 +62,7 @@ public class ElasticSearchClient {
       client = transportClient;
     } else {
       if (esNode == null) {
+        // initialize default settings
         settingsBuilder.put("node.name", "rocking-camunda-bpm-history")
             .put("node.client", true) // make node a client, so it won't become a master
             .put("node.local", false)
