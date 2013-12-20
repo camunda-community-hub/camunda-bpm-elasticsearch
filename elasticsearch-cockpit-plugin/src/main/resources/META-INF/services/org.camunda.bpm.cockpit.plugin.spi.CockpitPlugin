@@ -1,1 +1,2 @@
-org.camunda.bpm.cockpit.plugin.elasticsearch.ElasticSearchHistoryPlugin
+org.camunda.bpm.cockpit.plugin.dashboards.DashboardsPlugin
+org.camunda.bpm.cockpit.plugin.elasticsearch.ElasticSearchPlugin

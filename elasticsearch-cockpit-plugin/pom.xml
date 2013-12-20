@@ -23,10 +23,14 @@
   <parent>
     <groupId>org.camunda.bpm.elasticsearch</groupId>
     <artifactId>camunda-bpm-elasticsearch</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>7.1.0-SNAPSHOT</version>
   </parent>
 
-  <artifactId>elasticsearch-cockpit-plugin</artifactId>
+  <properties>
+    <camunda.cockpit.path>${project.basedir}/../../camunda-bpm-platform/webapps/camunda-webapp/webapp</camunda.cockpit.path>
+  </properties>
+
+  <artifactId>camunda-bpm-elasticsearch-cockpit-plugin</artifactId>
 
   <dependencies>
     <dependency>
@@ -67,31 +71,92 @@
   </dependencies>
 
   <build>
-    <plugins>
-      <plugin>
-        <groupId>org.apache.tomcat.maven</groupId>
-        <artifactId>tomcat7-maven-plugin</artifactId>
-        <version>2.1</version>
-        <configuration>
-          <contextReloadable>true</contextReloadable>
-          <ignorePackaging>true</ignorePackaging>
-          <path>/camunda</path>
-          <!--<staticContextDocbase>c:/images</staticContextDocbase>-->
-          <!--<staticContextPath>/images</staticContextPath>-->
-          <additionalClasspathDirs>
-            <additionalClasspathDir></additionalClasspathDir>
-            <additionalClasspathDir></additionalClasspathDir>
-          </additionalClasspathDirs>
-        </configuration>
-      </plugin>
-      <!--<plugin>-->
-        <!--<groupId>org.mortbay.jetty</groupId>-->
-        <!--<artifactId>jetty-maven-plugin</artifactId>-->
-        <!--<version>8.1.14.v20131031</version>-->
-        <!--<configuration>-->
-          <!--<scanIntervalSeconds>10</scanIntervalSeconds>-->
-        <!--</configuration>-->
-      <!--</plugin>-->
-    </plugins>
+    <resources>
+      <resource>
+        <directory>src/main/resources</directory>
+        <filtering>true</filtering>
+      </resource>
+    </resources>
   </build>
+
+  <profiles>
+    <profile>
+      <id>develop</id>
+      <dependencies>
+        <dependency>
+          <groupId>org.jboss.resteasy</groupId>
+          <artifactId>resteasy-jaxrs</artifactId>
+          <scope>runtime</scope>
+        </dependency>
+        <dependency>
+          <groupId>org.camunda.bpm</groupId>
+          <artifactId>camunda-engine</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.h2database</groupId>
+          <artifactId>h2</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>com.fasterxml.uuid</groupId>
+          <artifactId>java-uuid-generator</artifactId>
+        </dependency>
+        <dependency>
+          <groupId>org.camunda.bpm.webapp</groupId>
+          <artifactId>camunda-webapp</artifactId>
+          <version>${project.version}</version>
+          <type>jar</type>
+          <classifier>classes</classifier>
+        </dependency>
+      </dependencies>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.mortbay.jetty</groupId>
+            <artifactId>jetty-maven-plugin</artifactId>
+            <version>8.1.14.v20131031</version>
+            <configuration>
+              <webAppConfig>
+                <contextPath>/camunda</contextPath>
+                <defaultsDescriptor>${camunda.cockpit.path}/src/main/runtime/develop/jetty/webdefault.xml</defaultsDescriptor>
+                <resourceBases>
+                  <resourceBase>${camunda.cockpit.path}/src/main/webapp</resourceBase>
+                  <resourceBase>${project.basedir}/src/main/resources</resourceBase>
+                </resourceBases>
+              </webAppConfig>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>build-helper-maven-plugin</artifactId>
+            <executions>
+              <execution>
+                <id>add-sources</id>
+                <goals>
+                  <goal>add-source</goal>
+                </goals>
+                <configuration>
+                  <sources>
+                    <source>${camunda.cockpit.path}/src/main/runtime/develop/java</source>
+                  </sources>
+                </configuration>
+              </execution>
+              <execution>
+                <id>add-resources</id>
+                <goals>
+                  <goal>add-resource</goal>
+                </goals>
+                <configuration>
+                  <resources>
+                    <resource>
+                      <directory>${camunda.cockpit.path}/src/main/runtime/develop/resources</directory>
+                    </resource>
+                  </resources>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>

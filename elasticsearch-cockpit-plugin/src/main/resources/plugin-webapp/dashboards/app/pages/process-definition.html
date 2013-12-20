@@ -1,0 +1,7 @@
+<div class="main">
+  <h1>Dashboards for {{ processDefinition.id }}</h1>
+  
+  <div ng-repeat="provider in dashboardProviders">
+    <view provider="provider" vars="dashboardVars" />
+  </div>
+</div>
