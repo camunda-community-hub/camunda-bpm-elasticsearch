@@ -31,6 +31,7 @@
   <properties>
     <es.path.logs>${project.build.directory}/es/log</es.path.logs>
     <es.path.data>${project.build.directory}/es/data</es.path.data>
+    <es.path.work>${project.build.directory}/es/work</es.path.work>
   </properties>
 
   <dependencies>
@@ -105,6 +106,7 @@
       <properties>
         <es.path.logs></es.path.logs>
         <es.path.data></es.path.data>
+        <es.path.work></es.path.work>
       </properties>
     </profile>
   </profiles>

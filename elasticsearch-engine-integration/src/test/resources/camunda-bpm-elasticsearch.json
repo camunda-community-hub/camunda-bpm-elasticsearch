@@ -10,6 +10,11 @@
     "es.node.local" : true,
     "es.network.host" : "_local_",
     "es.path.logs" : "${es.path.logs}",
-    "es.path.data" : "${es.path.data}"
+    "es.path.data" : "${es.path.data}",
+    "es.path.work" : "${es.path.work}",
+    "es.index.number_of_shards" : "1",
+    "es.index.number_of_replicas" : "0",
+    "es.index.store.type" : "memory",
+    "es.index.store.fs.memory.enabled" : "true"
   }
 }

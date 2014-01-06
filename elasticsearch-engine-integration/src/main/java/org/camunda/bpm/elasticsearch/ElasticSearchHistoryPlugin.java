@@ -39,6 +39,10 @@ public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
   protected ElasticSearchHistoryPluginConfiguration historyPluginConfiguration;
   protected ElasticSearchClient elasticSearchClient;
 
+  protected String esHost = "localhost";
+  protected String esPort = "9300";
+  protected String esIndexingStrategy = "";
+  protected String esEventHandler = "";
   protected boolean clientNode = true;
   protected boolean localNode = false;
   protected boolean dataNode = false;

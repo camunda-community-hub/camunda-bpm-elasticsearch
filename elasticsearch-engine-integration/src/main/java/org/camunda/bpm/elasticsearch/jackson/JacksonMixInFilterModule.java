@@ -21,13 +21,7 @@ import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.module.SimpleModule;
 import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
 import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
-import org.camunda.bpm.engine.impl.history.event.HistoricActivityInstanceEventEntity;
-import org.camunda.bpm.engine.impl.history.event.HistoricDetailEventEntity;
-import org.camunda.bpm.engine.impl.history.event.HistoricFormPropertyEventEntity;
-import org.camunda.bpm.engine.impl.history.event.HistoricProcessInstanceEventEntity;
-import org.camunda.bpm.engine.impl.history.event.HistoricTaskInstanceEventEntity;
-import org.camunda.bpm.engine.impl.history.event.HistoricVariableUpdateEventEntity;
-import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
+import org.camunda.bpm.engine.impl.history.event.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -85,7 +79,7 @@ public class JacksonMixInFilterModule extends SimpleModule {
     HashMap<Class<? extends HistoryEvent>, Class> mixInFilters = new HashMap<Class<? extends HistoryEvent>, Class>();
 
     mixInFilters.put(HistoryEvent.class, HistoryEventMixIn.class);
-    //mixInFilters.put(HistoricScopeInstanceEvent.class, HistoricScopeInstanceEventMixIn.class); // introduced with 7.0.x
+    mixInFilters.put(HistoricScopeInstanceEvent.class, HistoricScopeInstanceEventMixIn.class); // introduced with 7.0.x
     mixInFilters.put(HistoricProcessInstanceEventEntity.class, HistoricProcessInstanceEventMixIn.class);
     mixInFilters.put(HistoricTaskInstanceEventEntity.class, HistoricTaskInstanceEventMixIn.class);
     mixInFilters.put(HistoricActivityInstanceEventEntity.class, HistoricActivityInstanceEventMixIn.class);
