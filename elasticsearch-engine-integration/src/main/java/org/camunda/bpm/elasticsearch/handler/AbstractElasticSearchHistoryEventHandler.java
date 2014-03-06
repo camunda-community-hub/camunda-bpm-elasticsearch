@@ -22,6 +22,7 @@ import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 import org.camunda.bpm.engine.impl.history.handler.HistoryEventHandler;
 
+import java.util.List;
 import java.util.logging.Logger;
 
 public abstract class AbstractElasticSearchHistoryEventHandler implements HistoryEventHandler {
@@ -34,6 +35,12 @@ public abstract class AbstractElasticSearchHistoryEventHandler implements Histor
 
   @Override
   public abstract void handleEvent(HistoryEvent historyEvent);
+
+  public void handleEvents(List<HistoryEvent> historyEvents) {
+    for (HistoryEvent historyEvent : historyEvents) {
+      handleEvent(historyEvent);
+    }
+  };
 
   public ElasticSearchIndexStrategy getIndexingStrategy() {
     return indexingStrategy;

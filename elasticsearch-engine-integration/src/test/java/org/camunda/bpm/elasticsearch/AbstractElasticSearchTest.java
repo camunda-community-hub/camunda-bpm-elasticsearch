@@ -64,9 +64,9 @@ public abstract class AbstractElasticSearchTest {
   protected void showMappings(String... indices) throws IOException {
     ClusterStateResponse clusterStateResponse = adminClient.cluster()
         .state(clusterStateRequest()
-        .filterBlocks(true)
-        .filterNodes(true)
-        .filteredIndices(indices))
+        .blocks(true)
+        .nodes(true)
+        .indices(indices))
         .actionGet();
 
     for (IndexMetaData indexMetaData : clusterStateResponse.getState().getMetaData()) {

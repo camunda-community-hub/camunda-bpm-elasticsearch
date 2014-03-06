@@ -21,16 +21,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.camunda.bpm.elasticsearch</groupId>
+    <groupId>org.camunda.bpm.extension</groupId>
     <artifactId>camunda-bpm-elasticsearch</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
   <artifactId>elasticsearch-lib-module</artifactId>
+  <name>camunda bpm - elasticsearch - tomcat</name>
 
   <dependencies>
     <dependency>
-      <groupId>org.camunda.bpm.elasticsearch</groupId>
+      <groupId>org.camunda.bpm.extension</groupId>
       <artifactId>elasticsearch-engine-integration</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>

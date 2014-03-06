@@ -27,11 +27,17 @@ import javax.jms.JMSException;
 import javax.jms.MessageProducer;
 import javax.jms.Session;
 import javax.jms.TextMessage;
+import java.util.List;
 
 public class AsyncElasticSearchHistoryEventHandler implements HistoryEventHandler {
 
   @Override
   public void handleEvent(HistoryEvent historyEvent) {
+
+  }
+
+  @Override
+  public void handleEvents(List<HistoryEvent> historyEvents) {
 
   }
 

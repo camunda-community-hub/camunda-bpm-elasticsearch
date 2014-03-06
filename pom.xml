@@ -11,15 +11,15 @@
     <relativePath>../camunda-bpm-platform</relativePath>
   </parent>
 
-  <groupId>org.camunda.bpm.elasticsearch</groupId>
+  <groupId>org.camunda.bpm.extension</groupId>
   <artifactId>camunda-bpm-elasticsearch</artifactId>
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
   <properties>
-    <version.elasticsearch>0.90.7</version.elasticsearch>
-    <version.jackson>2.2.3</version.jackson>
-    <version.lucene>4.5.1</version.lucene>
+    <version.elasticsearch>1.0.1</version.elasticsearch>
+    <version.jackson>2.3.0</version.jackson>
+    <version.lucene>4.6.1</version.lucene>
     <version.guava>15.0</version.guava>
 
     <version.elasticsearch-test>0.90.6</version.elasticsearch-test>
