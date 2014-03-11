@@ -17,19 +17,17 @@
 package org.camunda.bpm.elasticsearch;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchAdminClient;
-import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchClient;
-import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchNode;
-import com.github.tlrx.elasticsearch.test.support.junit.runners.ElasticsearchRunner;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
 import org.elasticsearch.client.AdminClient;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
+import org.elasticsearch.common.collect.ImmutableOpenMap;
+import org.elasticsearch.common.hppc.cursors.ObjectCursor;
 import org.elasticsearch.node.Node;
+import org.elasticsearch.test.ElasticsearchIntegrationTest;
 import org.junit.Rule;
-import org.junit.runner.RunWith;
 
 import java.io.IOException;
 import java.util.Map;
@@ -38,20 +36,16 @@ import java.util.logging.Logger;
 import static org.elasticsearch.client.Requests.clusterStateRequest;
 import static org.elasticsearch.client.Requests.refreshRequest;
 
-@RunWith(ElasticsearchRunner.class)
-public abstract class AbstractElasticSearchTest {
+public abstract class AbstractElasticSearchTest extends ElasticsearchIntegrationTest {
 
-  protected Logger logger = Logger.getLogger(getClass().getName());
+  protected Logger logger = Logger.getLogger(AbstractElasticSearchTest.class.getName());
 
   protected ObjectMapper mapper = new ObjectMapper();
 
-  @ElasticsearchNode(configFile = "config/elasticsearch-test.yml")
   protected Node node;
 
-  @ElasticsearchClient()
   protected Client client;
 
-  @ElasticsearchAdminClient()
   protected AdminClient adminClient;
 
   @Rule
@@ -72,14 +66,12 @@ public abstract class AbstractElasticSearchTest {
     for (IndexMetaData indexMetaData : clusterStateResponse.getState().getMetaData()) {
       printMapping(indexMetaData.getMappings());
     }
-
   }
 
-  private void printMapping(Map<String, MappingMetaData> mappedMetaData) {
-    for (Map.Entry<String, MappingMetaData> metaDataEntry : mappedMetaData.entrySet()) {
-      Map<String, Object> sourceAsMap = null;
+  private void printMapping(ImmutableOpenMap<String, MappingMetaData> mappedMetaData) {
+    for (ObjectCursor<MappingMetaData> metaDataEntry : mappedMetaData.values()) {
       try {
-        sourceAsMap = metaDataEntry.getValue().getSourceAsMap();
+        Map<String, Object> sourceAsMap = metaDataEntry.value.getSourceAsMap();
         logger.info(mapper.writeValueAsString(sourceAsMap));
       } catch (IOException e) {
         // nop

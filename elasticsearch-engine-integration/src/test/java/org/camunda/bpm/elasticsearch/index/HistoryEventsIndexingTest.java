@@ -23,6 +23,7 @@ import org.camunda.bpm.elasticsearch.util.IoUtil;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.FilterBuilders;
+import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
@@ -50,9 +51,11 @@ public class HistoryEventsIndexingTest extends AbstractElasticSearchTest {
 
     ensureIndexRefreshed();
 
+    //    TermQueryBuilder query = QueryBuilders.termQuery("processInstanceId", pids[0]);
+    FilteredQueryBuilder query = QueryBuilders.filteredQuery(QueryBuilders.matchAllQuery(), FilterBuilders.termFilter("processInstanceId", pids[0]));
+
     SearchRequestBuilder searchRequestBuilder = client.prepareSearch(ES_DEFAULT_INDEX_NAME_CAMUNDA_BPM)
-        .setQuery(QueryBuilders.matchAllQuery())
-        .setFilter(FilterBuilders.queryFilter(QueryBuilders.fieldQuery("processInstanceId", pids[0])));
+        .setQuery(query);
 
     IoUtil.writeToFile(searchRequestBuilder.toString(), "test.json", true);
 

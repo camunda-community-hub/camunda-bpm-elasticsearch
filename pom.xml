@@ -51,6 +51,14 @@
       </dependency>
 
       <dependency>
+        <groupId>org.elasticsearch</groupId>
+        <artifactId>elasticsearch</artifactId>
+        <version>${version.elasticsearch}</version>
+        <type>test-jar</type>
+        <scope>test</scope>
+      </dependency>
+
+      <dependency>
         <groupId>org.camunda.bpm</groupId>
         <artifactId>camunda-engine</artifactId>
         <version>${version.camunda-bpm}</version>
@@ -72,12 +80,6 @@
       </dependency>
 
       <dependency>
-        <groupId>com.github.tlrx</groupId>
-        <artifactId>elasticsearch-test</artifactId>
-        <version>${version.elasticsearch-test}</version>
-      </dependency>
-
-      <dependency>
         <groupId>com.fasterxml.jackson.core</groupId>
         <artifactId>jackson-core</artifactId>
         <version>${version.jackson}</version>
@@ -92,6 +94,7 @@
         <groupId>junit</groupId>
         <artifactId>junit</artifactId>
         <version>${version.junit}</version>
+        <scope>test</scope>
       </dependency>
 
       <!-- JMS INTEGRATION -->
