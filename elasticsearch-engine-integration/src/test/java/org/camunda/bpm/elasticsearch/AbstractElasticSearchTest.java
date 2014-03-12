@@ -19,13 +19,10 @@ package org.camunda.bpm.elasticsearch;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.elasticsearch.action.admin.cluster.state.ClusterStateResponse;
-import org.elasticsearch.client.AdminClient;
-import org.elasticsearch.client.Client;
 import org.elasticsearch.cluster.metadata.IndexMetaData;
 import org.elasticsearch.cluster.metadata.MappingMetaData;
 import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.hppc.cursors.ObjectCursor;
-import org.elasticsearch.node.Node;
 import org.elasticsearch.test.ElasticsearchIntegrationTest;
 import org.junit.Rule;
 
@@ -34,7 +31,6 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 import static org.elasticsearch.client.Requests.clusterStateRequest;
-import static org.elasticsearch.client.Requests.refreshRequest;
 
 public abstract class AbstractElasticSearchTest extends ElasticsearchIntegrationTest {
 
@@ -42,21 +38,11 @@ public abstract class AbstractElasticSearchTest extends ElasticsearchIntegration
 
   protected ObjectMapper mapper = new ObjectMapper();
 
-  protected Node node;
-
-  protected Client client;
-
-  protected AdminClient adminClient;
-
   @Rule
   public ProcessEngineRule processEngineRule = new ProcessEngineRule();
 
-  protected void ensureIndexRefreshed(String... indices) {
-    adminClient.indices().refresh(refreshRequest(indices)).actionGet();
-  }
-
   protected void showMappings(String... indices) throws IOException {
-    ClusterStateResponse clusterStateResponse = adminClient.cluster()
+    ClusterStateResponse clusterStateResponse = admin().cluster()
         .state(clusterStateRequest()
         .blocks(true)
         .nodes(true)
