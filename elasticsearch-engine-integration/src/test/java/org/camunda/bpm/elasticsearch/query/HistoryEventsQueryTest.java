@@ -31,7 +31,7 @@ public class HistoryEventsQueryTest extends AbstractElasticSearchTest {
   public void queryShouldFindProcessInstanceViaVariableValue() {
     HashMap<String,ProcessDataContainer> stringProcessDataContainerHashMap = TestDataGenerator.startInvoiceProcess(processEngineRule.getProcessEngine(), 10);
 
-    ensureIndexRefreshed();
+    flushAndRefresh();
 
 //    QueryBuilders.boolQuery().must(QueryBuilders.nestedQuery(""))
 //    SearchRequestBuilder srb = client.prepareSearch().setQuery();
