@@ -15,13 +15,16 @@
   </condition>
   <!-- maybe check JBOSS_HOME env var and check for existance of directory -->
 
-  <property name="version.camunda-bpm" value="7.0.0-Final" />
-  <property name="version.tomcat" value="7.0.33" />
-  <property name="version.jboss" value="7.1.3.Final" />
-  <property name="version.elasticsearch" value="0.90.7" />
+  <property name="version.camunda-bpm" value="7.1.0-SNAPSHOT" />
+  <property name="version.tomcat" value="7.0.50" />
+  <property name="version.jboss" value="7.2.0.Final" />
+  <property name="version.elasticsearch" value="1.1.0" />
   <property name="elasticsearch.dir" value="elasticsearch-${version.elasticsearch}" />
   <property name="elasticsearch.file" value="${elasticsearch.dir}.${archive.type}" />
   <property name="elasticsearch.url" value="https://download.elasticsearch.org/elasticsearch/elasticsearch/${elasticsearch.file}" />
+
+  <!-- logstash download https://download.elasticsearch.org/logstash/logstash/logstash-1.4.0.zip -->
+  <!-- kibana download https://download.elasticsearch.org/kibana/kibana/kibana-3.0.0.zip -->
 
   <property name="distro" value="jboss" /> <!-- or tomcat -->
   <property name="distro.dir" value="camunda-${distro}" />
