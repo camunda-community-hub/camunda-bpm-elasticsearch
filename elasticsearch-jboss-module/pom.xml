@@ -21,7 +21,7 @@
   <modelVersion>4.0.0</modelVersion>
 
   <parent>
-    <groupId>org.camunda.bpm.extension</groupId>
+    <groupId>org.camunda.bpm.extension.elasticsearch</groupId>
     <artifactId>camunda-bpm-elasticsearch</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
@@ -31,7 +31,7 @@
 
   <dependencies>
     <dependency>
-      <groupId>org.camunda.bpm.extension</groupId>
+      <groupId>org.camunda.bpm.extension.elasticsearch</groupId>
       <artifactId>elasticsearch-engine-integration</artifactId>
       <version>${project.version}</version>
       <scope>provided</scope>

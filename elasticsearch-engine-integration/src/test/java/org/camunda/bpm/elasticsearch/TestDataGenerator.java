@@ -27,7 +27,6 @@ import org.camunda.bpm.engine.runtime.ProcessInstance;
 import org.camunda.bpm.engine.runtime.VariableInstance;
 import org.camunda.bpm.engine.task.Task;
 import org.elasticsearch.common.base.Charsets;
-import org.elasticsearch.common.util.concurrent.jsr166y.ThreadLocalRandom;
 import org.junit.Assert;
 
 import java.io.BufferedReader;
@@ -70,7 +69,7 @@ public class TestDataGenerator {
       }
       reader.close();
       reader = new BufferedReader(new InputStreamReader(nodeNames.openStream(), Charsets.UTF_8));
-      int number = ((ThreadLocalRandom.current().nextInt(numberOfNames)) % numberOfNames);
+      int number = ((new Random().nextInt(numberOfNames)) % numberOfNames);
       for (int i = 0; i < number; i++) {
         reader.readLine();
       }
