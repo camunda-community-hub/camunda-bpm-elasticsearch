@@ -29,6 +29,7 @@ import org.camunda.bpm.elasticsearch.util.ElasticSearchHelper;
 import org.camunda.bpm.engine.impl.cfg.AbstractProcessEnginePlugin;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.interceptor.SessionFactory;
+import org.elasticsearch.client.Client;
 
 public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
 
@@ -40,6 +41,7 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
   protected ElasticSearchHistoryEventHandler historyEventHandler;
   protected ElasticSearchHistoryPluginConfiguration historyPluginConfiguration;
   protected ElasticSearchClient elasticSearchClient;
+  protected ElasticSearchIndexStrategy indexingStrategy;
 
   protected String esCluster = null;
   protected String esHost = null;
@@ -60,7 +62,7 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
     // retrieve indexing strategy
     Class<? extends ElasticSearchIndexStrategy> indexingStrategyClass =
         ClassUtil.loadClass(historyPluginConfiguration.getIndexingStrategy(), null, ElasticSearchIndexStrategy.class);
-    ElasticSearchIndexStrategy indexingStrategy = ClassUtil.createInstance(indexingStrategyClass);
+    indexingStrategy = ClassUtil.createInstance(indexingStrategyClass);
 
     // create es client
     elasticSearchClient = new ElasticSearchClient(historyPluginConfiguration);
@@ -73,7 +75,6 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
     Class<? extends ElasticSearchHistoryEventHandler> historyEventHandlerClass =
         ClassUtil.loadClass(historyPluginConfiguration.getEventHandler(), null, ElasticSearchHistoryEventHandler.class);
     historyEventHandler = ClassUtil.createInstance(historyEventHandlerClass);
-    historyEventHandler.setProcessEngineConfiguration(processEngineConfiguration);
 
     if(processEngineConfiguration.getCustomSessionFactories() == null) {
       processEngineConfiguration.setCustomSessionFactories(new ArrayList<SessionFactory>());
@@ -192,4 +193,8 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
     return elasticSearchClient;
   }
 
+  public void setElasticSearchClient(Client client) {
+    elasticSearchClient.set(client);
+    indexingStrategy.setEsClient(elasticSearchClient.get());
+  }
 }

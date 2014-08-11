@@ -16,22 +16,13 @@
 
 package org.camunda.bpm.elasticsearch.handler;
 
-import org.camunda.bpm.elasticsearch.ElasticSearchHistoryPluginConfiguration;
-import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 import org.camunda.bpm.engine.impl.history.handler.HistoryEventHandler;
 
 import java.util.List;
-import java.util.logging.Logger;
 
 public abstract class ElasticSearchHistoryEventHandler implements HistoryEventHandler {
 
-  protected Logger LOGGER = Logger.getLogger(this.getClass().getName());
-
-  protected ElasticSearchHistoryPluginConfiguration historyPluginConfiguration;
-  protected ProcessEngineConfigurationImpl processEngineConfiguration;
-
-  @Override
   public abstract void handleEvent(HistoryEvent historyEvent);
 
   public void handleEvents(List<HistoryEvent> historyEvents) {
@@ -40,11 +31,4 @@ public abstract class ElasticSearchHistoryEventHandler implements HistoryEventHa
     }
   }
 
-  public void setProcessEngineConfiguration(ProcessEngineConfigurationImpl processEngineConfiguration) {
-    this.processEngineConfiguration = processEngineConfiguration;
-  }
-
-  public ProcessEngineConfigurationImpl getProcessEngineConfiguration() {
-    return processEngineConfiguration;
-  }
 }

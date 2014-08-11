@@ -21,6 +21,7 @@ import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchAdminClient;
 import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchClient;
 import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchNode;
 import com.github.tlrx.elasticsearch.test.support.junit.runners.ElasticsearchRunner;
+import org.camunda.bpm.elasticsearch.util.ElasticSearchHelper;
 import org.camunda.bpm.engine.impl.ProcessEngineImpl;
 import org.camunda.bpm.engine.impl.cfg.ProcessEnginePlugin;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
@@ -72,12 +73,17 @@ public abstract class AbstractElasticSearchTest {
 
   @Before
   public void initialize() {
+    ElasticSearchHistoryPluginConfiguration historyPluginConfiguration = ElasticSearchHistoryPluginConfiguration.readConfigurationFromClasspath();
+    ElasticSearchHelper.checkIndex(client, historyPluginConfiguration.getIndex());
+    ElasticSearchHelper.checkTypeAndMapping(client, historyPluginConfiguration.getIndex(), historyPluginConfiguration.getType());
+
     List<ProcessEnginePlugin> processEnginePlugins = ((ProcessEngineImpl) processEngineRule.getProcessEngine())
         .getProcessEngineConfiguration()
         .getProcessEnginePlugins();
     for (ProcessEnginePlugin processEnginePlugin : processEnginePlugins) {
       if (processEnginePlugin instanceof ElasticSearchHistoryPlugin) {
         ElasticSearchHistoryPlugin plugin = (ElasticSearchHistoryPlugin) processEnginePlugin;
+        plugin.setElasticSearchClient(client);
       }
     }
   }

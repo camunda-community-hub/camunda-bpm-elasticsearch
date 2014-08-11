@@ -1,5 +1,7 @@
 package org.camunda.bpm.elasticsearch.index;
 
+import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchIndex;
+import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchMapping;
 import org.camunda.bpm.elasticsearch.AbstractElasticSearchTest;
 import org.camunda.bpm.elasticsearch.ProcessDataContainer;
 import org.camunda.bpm.elasticsearch.TestDataGenerator;
@@ -26,6 +28,12 @@ import static org.junit.Assert.assertNotNull;
 public class HistoryEventsMappingTest extends AbstractElasticSearchTest {
 
   @Test
+//  @ElasticsearchIndex(
+//      indexName = ES_DEFAULT_INDEX_NAME_CAMUNDA_BPM,
+//      cleanAfter = true,
+//      mappings = @ElasticsearchMapping(typeName = ES_DEFAULT_TYPE_NAME_CAMUNDA_BPM, properties = {
+//          @Elasticsearch
+//      }))
   public void testIndexingSingleInvoice() throws IOException {
     HashMap<String,ProcessDataContainer> processesById = TestDataGenerator.startInvoiceProcess(processEngineRule.getProcessEngine(), 1);
 
@@ -35,13 +43,14 @@ public class HistoryEventsMappingTest extends AbstractElasticSearchTest {
 
     flushAndRefresh();
 
-//    TermQueryBuilder query = QueryBuilders.termQuery("processInstanceId", pids[0]);
+    showMappings(ES_DEFAULT_INDEX_NAME_CAMUNDA_BPM);
+
     FilteredQueryBuilder query = QueryBuilders.filteredQuery(QueryBuilders.matchAllQuery(), FilterBuilders.termFilter("processInstanceId", pids[0]));
 
     SearchRequestBuilder searchRequestBuilder = client.prepareSearch(ES_DEFAULT_INDEX_NAME_CAMUNDA_BPM)
         .setQuery(query);
 
-    IoUtil.writeToFile(searchRequestBuilder.toString(), "test.json", true);
+    IoUtil.writeToFile(searchRequestBuilder.toString(), this.getClass().getSimpleName() + ".json", true);
 
     SearchResponse searchResponse = searchRequestBuilder.get();
     SearchHits hits = searchResponse.getHits();

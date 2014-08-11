@@ -16,7 +16,6 @@
 
 package org.camunda.bpm.elasticsearch.handler;
 
-import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 import org.camunda.bpm.engine.impl.history.handler.DbHistoryEventHandler;
 
@@ -29,12 +28,6 @@ public class ElasticSearchTransactionAwareCompositeEventHandler extends ElasticS
   public void handleEvent(HistoryEvent historyEvent) {
     dbHistoryEventHandler.handleEvent(historyEvent);
     elasticSearchTransactionAwareHistoryEventHandler.handleEvent(historyEvent);
-  }
-
-  @Override
-  public void setProcessEngineConfiguration(ProcessEngineConfigurationImpl processEngineConfiguration) {
-    super.setProcessEngineConfiguration(processEngineConfiguration);
-    elasticSearchTransactionAwareHistoryEventHandler.setProcessEngineConfiguration(processEngineConfiguration);
   }
 
 }

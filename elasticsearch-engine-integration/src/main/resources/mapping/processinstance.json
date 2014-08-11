@@ -65,7 +65,7 @@
         }
       },
       {
-        "timestap_field_template": {
+        "timestamp_field_template": {
           "match_mapping_type": "long",
           "match": "timestamp",
           "mapping": {

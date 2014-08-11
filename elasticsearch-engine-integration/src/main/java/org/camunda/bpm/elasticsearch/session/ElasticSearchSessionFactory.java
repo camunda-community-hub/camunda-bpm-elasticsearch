@@ -22,7 +22,7 @@ import org.camunda.bpm.engine.impl.interceptor.SessionFactory;
  */
 public class ElasticSearchSessionFactory implements SessionFactory {
 
-  protected final ElasticSearchIndexStrategy indexingStrategy;
+  protected ElasticSearchIndexStrategy indexingStrategy;
 
   public ElasticSearchSessionFactory(ElasticSearchIndexStrategy indexingStrategy) {
     this.indexingStrategy = indexingStrategy;

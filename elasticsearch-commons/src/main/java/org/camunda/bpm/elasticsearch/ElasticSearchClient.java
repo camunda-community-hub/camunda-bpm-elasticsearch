@@ -104,6 +104,10 @@ public class ElasticSearchClient {
     return esClient;
   }
 
+  public void set(Client esClient) {
+    this.esClient = esClient;
+  }
+
   protected void addCustomESProperties(ImmutableSettings.Builder settingsBuilder, HashMap<String, Object> properties) {
     for (Map.Entry<String, Object> property : properties.entrySet()) {
       if (property.getKey().toLowerCase().startsWith("es.")) {

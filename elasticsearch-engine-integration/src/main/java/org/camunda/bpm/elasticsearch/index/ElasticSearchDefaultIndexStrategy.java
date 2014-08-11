@@ -43,8 +43,7 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
   protected static final String ES_INDEX_UPDATE_SCRIPT =
       "if (isActivityInstanceEvent) { if (ctx._source.containsKey(\"activities\")) { ctx._source.activities += value } else { ctx._source.activities = value } };" +
       "if (isTaskInstanceEvent) { if (ctx._source.containsKey(\"tasks\")) { ctx._source.tasks += value } else { ctx._source.tasks = value } };" +
-      "if (isVariableUpdateEvent) { if (ctx._source.containsKey(\"variables\")) { ctx._source.variables += value } else { ctx._source.variables = value } };" +
-      "if (isIncidentUpdateEvent) { if (ctx._source.containsKey(\"incidents\")) { ctx._source.incidents += value } else { ctx._source.incidents = value } };";
+      "if (isVariableUpdateEvent) { if (ctx._source.containsKey(\"variables\")) { ctx._source.variables += value } else { ctx._source.variables = value } };";
   protected static final int WAIT_FOR_RESPONSE = 5;
 
   public void executeRequest(List<HistoryEvent> historyEvents) {
@@ -140,17 +139,14 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
       scriptParams.put("isActivityInstanceEvent", true);
       scriptParams.put("isTaskInstanceEvent", false);
       scriptParams.put("isVariableUpdateEvent", false);
-      scriptParams.put("isIncidentUpdateEvent", false);
     } else if (historyEvent instanceof HistoricTaskInstanceEventEntity) {
       scriptParams.put("isActivityInstanceEvent", false);
       scriptParams.put("isTaskInstanceEvent", true);
       scriptParams.put("isVariableUpdateEvent", false);
-      scriptParams.put("isIncidentUpdateEvent", false);
     } else {
       scriptParams.put("isActivityInstanceEvent", false);
       scriptParams.put("isTaskInstanceEvent", false);
       scriptParams.put("isVariableUpdateEvent", true);
-      scriptParams.put("isIncidentUpdateEvent", false);
     }
 
     String eventJson = transformer.transformToJson(historyEvent);
