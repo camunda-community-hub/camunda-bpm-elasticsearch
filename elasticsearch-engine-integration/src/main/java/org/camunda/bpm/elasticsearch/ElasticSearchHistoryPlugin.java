@@ -85,7 +85,7 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
   }
 
   protected void setHistoryPluginConfigurationProperties(ElasticSearchHistoryPluginConfiguration historyPluginConfiguration) {
-    if (esCluster == null || esCluster.isEmpty()) {
+    if (esCluster != null && !esCluster.isEmpty()) {
       historyPluginConfiguration.setEsClusterName(esCluster);
     }
     if (esHost != null && !esHost.isEmpty()) {
