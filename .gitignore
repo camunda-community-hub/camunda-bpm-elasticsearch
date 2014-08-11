@@ -23,3 +23,6 @@ target
 
 # Generated files
 test*.json
+
+#elastic search data #
+**/data/elasticsearch
