@@ -26,23 +26,21 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
 
-  <properties>
-    <camunda.cockpit.path>${project.basedir}/../../camunda-bpm-platform/webapps/camunda-webapp/webapp</camunda.cockpit.path>
-  </properties>
-
   <artifactId>elasticsearch-cockpit-plugin</artifactId>
   <name>camunda bpm - elasticsearch - cockpit plugin</name>
 
   <dependencies>
     <dependency>
-      <groupId>org.elasticsearch</groupId>
-      <artifactId>elasticsearch</artifactId>
+      <groupId>org.camunda.bpm.extension.elasticsearch</groupId>
+      <artifactId>elasticsearch-engine-integration</artifactId>
+      <version>${project.version}</version>
     </dependency>
 
     <dependency>
       <groupId>org.camunda.bpm.webapp</groupId>
       <artifactId>camunda-webapp-core</artifactId>
       <version>${version.camunda-bpm}</version>
+      <scope>provided</scope>
     </dependency>
 
     <dependency>
@@ -85,28 +83,10 @@
       <id>develop</id>
       <dependencies>
         <dependency>
-          <groupId>org.jboss.resteasy</groupId>
-          <artifactId>resteasy-jaxrs</artifactId>
-          <scope>runtime</scope>
-        </dependency>
-        <dependency>
-          <groupId>org.camunda.bpm</groupId>
-          <artifactId>camunda-engine</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>com.h2database</groupId>
-          <artifactId>h2</artifactId>
-        </dependency>
-        <dependency>
-          <groupId>com.fasterxml.uuid</groupId>
-          <artifactId>java-uuid-generator</artifactId>
-        </dependency>
-        <dependency>
           <groupId>org.camunda.bpm.webapp</groupId>
-          <artifactId>camunda-webapp</artifactId>
+          <artifactId>camunda-webapp-tomcat-standalone</artifactId>
           <version>${version.camunda-bpm}</version>
-          <type>jar</type>
-          <classifier>classes</classifier>
+          <type>war</type>
         </dependency>
       </dependencies>
       <build>
@@ -118,43 +98,12 @@
             <configuration>
               <webAppConfig>
                 <contextPath>/camunda</contextPath>
-                <defaultsDescriptor>${camunda.cockpit.path}/src/main/runtime/develop/jetty/webdefault.xml</defaultsDescriptor>
                 <resourceBases>
-                  <resourceBase>${camunda.cockpit.path}/src/main/webapp</resourceBase>
                   <resourceBase>${project.basedir}/src/main/resources</resourceBase>
+                  <resourceBAse>${project.basedir}/src/develop/resources</resourceBAse>
                 </resourceBases>
               </webAppConfig>
             </configuration>
-          </plugin>
-          <plugin>
-            <groupId>org.codehaus.mojo</groupId>
-            <artifactId>build-helper-maven-plugin</artifactId>
-            <executions>
-              <execution>
-                <id>add-sources</id>
-                <goals>
-                  <goal>add-source</goal>
-                </goals>
-                <configuration>
-                  <sources>
-                    <source>${camunda.cockpit.path}/src/main/runtime/develop/java</source>
-                  </sources>
-                </configuration>
-              </execution>
-              <execution>
-                <id>add-resources</id>
-                <goals>
-                  <goal>add-resource</goal>
-                </goals>
-                <configuration>
-                  <resources>
-                    <resource>
-                      <directory>${camunda.cockpit.path}/src/main/runtime/develop/resources</directory>
-                    </resource>
-                  </resources>
-                </configuration>
-              </execution>
-            </executions>
           </plugin>
         </plugins>
       </build>
