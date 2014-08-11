@@ -34,6 +34,7 @@
     <version.spring>3.1.2.RELEASE</version.spring>
     <version.spring-it>2.2.5.RELEASE</version.spring-it>
 
+    <version.java>1.7</version.java>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
   </properties>
 
@@ -202,9 +203,8 @@
         <artifactId>maven-compiler-plugin</artifactId>
         <version>3.1</version>
         <configuration>
-          <!-- http://maven.apache.org/plugins/maven-compiler-plugin/ -->
-          <source>1.7</source>
-          <target>1.7</target>
+          <source>${version.java}</source>
+          <target>${version.java}</target>
         </configuration>
       </plugin>
     </plugins>
