@@ -20,7 +20,6 @@ import org.camunda.bpm.elasticsearch.AbstractElasticSearchTest;
 import org.camunda.bpm.elasticsearch.ProcessDataContainer;
 import org.camunda.bpm.elasticsearch.TestDataGenerator;
 import org.camunda.bpm.elasticsearch.util.IoUtil;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.FilterBuilders;
@@ -28,7 +27,6 @@ import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;

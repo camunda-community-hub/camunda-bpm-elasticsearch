@@ -21,6 +21,8 @@ import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchAdminClient;
 import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchClient;
 import com.github.tlrx.elasticsearch.test.annotations.ElasticsearchNode;
 import com.github.tlrx.elasticsearch.test.support.junit.runners.ElasticsearchRunner;
+import org.camunda.bpm.engine.impl.ProcessEngineImpl;
+import org.camunda.bpm.engine.impl.cfg.ProcessEnginePlugin;
 import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.elasticsearch.action.ShardOperationFailedException;
 import org.elasticsearch.action.admin.cluster.health.ClusterHealthRequest;
@@ -38,10 +40,12 @@ import org.elasticsearch.common.collect.ImmutableOpenMap;
 import org.elasticsearch.common.hppc.cursors.ObjectCursor;
 import org.elasticsearch.node.Node;
 import org.elasticsearch.rest.RestStatus;
+import org.junit.Before;
 import org.junit.Rule;
 import org.junit.runner.RunWith;
 
 import java.io.IOException;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Logger;
 
@@ -65,6 +69,18 @@ public abstract class AbstractElasticSearchTest {
 
   @Rule
   public ProcessEngineRule processEngineRule = new ProcessEngineRule();
+
+  @Before
+  public void initialize() {
+    List<ProcessEnginePlugin> processEnginePlugins = ((ProcessEngineImpl) processEngineRule.getProcessEngine())
+        .getProcessEngineConfiguration()
+        .getProcessEnginePlugins();
+    for (ProcessEnginePlugin processEnginePlugin : processEnginePlugins) {
+      if (processEnginePlugin instanceof ElasticSearchHistoryPlugin) {
+        ElasticSearchHistoryPlugin plugin = (ElasticSearchHistoryPlugin) processEnginePlugin;
+      }
+    }
+  }
 
   protected void showMappings(String... indices) throws IOException {
     ClusterStateResponse clusterStateResponse = adminClient.cluster()
@@ -120,7 +136,7 @@ public abstract class AbstractElasticSearchTest {
 
   private FlushResponse flush(boolean ignoreNotAllowed) {
     waitForRelocation();
-    FlushResponse actionGet = adminClient.indices().prepareFlush().execute().actionGet();
+    FlushResponse actionGet = adminClient.indices().prepareFlush().setForce(true).setFull(true).execute().actionGet();
     if (ignoreNotAllowed) {
       for (ShardOperationFailedException failure : actionGet.getShardFailures()) {
 //        assertThat("unexpected flush failure " + failure.reason(), failure.status(), equalTo(RestStatus.SERVICE_UNAVAILABLE));

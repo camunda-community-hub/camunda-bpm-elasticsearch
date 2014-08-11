@@ -43,7 +43,7 @@ public class ArchiveInvoiceService implements JavaDelegate {
 
   public void execute(DelegateExecution execution) throws Exception {
 
-    LOGGER.info("\n\n  ... Now archiving invoice "+execution.getVariable("invoiceNumber")+" \n\n");
+    LOGGER.info("\n\n  ... Now archiving invoice " + execution.getProcessInstanceId() +"\n");
 
   }
 

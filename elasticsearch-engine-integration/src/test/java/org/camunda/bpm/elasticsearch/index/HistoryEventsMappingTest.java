@@ -4,16 +4,13 @@ import org.camunda.bpm.elasticsearch.AbstractElasticSearchTest;
 import org.camunda.bpm.elasticsearch.ProcessDataContainer;
 import org.camunda.bpm.elasticsearch.TestDataGenerator;
 import org.camunda.bpm.elasticsearch.util.IoUtil;
-import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.index.query.FilterBuilders;
 import org.elasticsearch.index.query.FilteredQueryBuilder;
 import org.elasticsearch.index.query.QueryBuilders;
-import org.elasticsearch.index.query.TermQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
-import org.junit.Rule;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -30,13 +27,13 @@ public class HistoryEventsMappingTest extends AbstractElasticSearchTest {
 
   @Test
   public void testIndexingSingleInvoice() throws IOException {
-    HashMap<String,ProcessDataContainer> variablesByProcessIds = TestDataGenerator.startInvoiceProcess(processEngineRule.getProcessEngine(), 1);
+    HashMap<String,ProcessDataContainer> processesById = TestDataGenerator.startInvoiceProcess(processEngineRule.getProcessEngine(), 1);
 
-    String[] pids = variablesByProcessIds.keySet().toArray(new String[0]);
+    String[] pids = processesById.keySet().toArray(new String[0]);
 
     // elasticsearch //////////////////////////////
 
-//    flushAndRefresh();
+    flushAndRefresh();
 
 //    TermQueryBuilder query = QueryBuilders.termQuery("processInstanceId", pids[0]);
     FilteredQueryBuilder query = QueryBuilders.filteredQuery(QueryBuilders.matchAllQuery(), FilterBuilders.termFilter("processInstanceId", pids[0]));
