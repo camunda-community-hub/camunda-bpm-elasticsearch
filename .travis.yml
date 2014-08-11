@@ -1,8 +1,0 @@
-language: java
-script: mvn clean install -B -q
-jdk:
-- oraclejdk7
-env:
-notifications:
-  email:
-    - cl@camunda.com

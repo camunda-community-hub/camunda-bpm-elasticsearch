@@ -1,5 +1,7 @@
-camunda BPM - ElasticSearch - [![Build Status](https://travis-ci.org/camunda/camunda-bpm-elasticsearch.png)](https://travis-ci.org/camunda/camunda-bpm-elasticsearch)
+camunda BPM - ElasticSearch extension
 ===========================
+
+[![Build Status](https://drone.io/github.com/camunda/camunda-bpm-elasticsearch/status.png)](https://drone.io/github.com/camunda/camunda-bpm-elasticsearch/latest)
 
 camunda-bpm-elasticsearch combines the camunda-bpm platform with the powerful search capabilities of ElasticSearch.
 It comes with a process engine plugin which indexes all generated history events through ElasticSearch.
