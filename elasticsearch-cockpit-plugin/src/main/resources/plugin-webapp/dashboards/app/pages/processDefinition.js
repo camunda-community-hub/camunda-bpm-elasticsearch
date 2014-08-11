@@ -12,12 +12,12 @@ ngDefine('dashboards.pages.processDefinition', [
     $scope.dashboardProviders = Views.getProviders({ component: 'dashboard.processDefinition.view' });
   }];
 
-  var RouteConfig = [ '$routeProvider', 'AuthenticationServiceProvider', function($routeProvider, AuthenticationServiceProvider) {
+  var RouteConfig = [ '$routeProvider', function($routeProvider) {
     $routeProvider.when('/process-definition/:processDefinitionId/dashboard', {
       templateUrl: require.toUrl('./process-definition.html'),
       controller: Controller,
+      authentication: 'required',
       resolve: {
-        authenticatedUser: AuthenticationServiceProvider.requireAuthenticatedUser,
         processDefinition: [ 'ResourceResolver', 'ProcessDefinitionResource',
           function(ResourceResolver, ProcessDefinitionResource) {
             return ResourceResolver.getByRouteParam('processDefinitionId', {

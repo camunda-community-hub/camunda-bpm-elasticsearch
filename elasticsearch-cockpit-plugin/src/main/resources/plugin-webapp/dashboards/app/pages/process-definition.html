@@ -1,14 +1,18 @@
-<div class="ctn-header">
-  <h1>
-    <i class="icon-type icon-globe"></i>
-    {{ processDefinition.name || processDefinition.key }}
-  </h1>
+<div class="ctn-fixed-view">
 
-  <div class="view-pills" id="cockpit.processDefinition.view"></div>
-</div>
+  <div class="ctn-header">
+    <h1>
+      <i class="icon-type icon-globe"></i>
+      {{ processDefinition.name || processDefinition.key }}
+    </h1>
 
-<div class="ctn-content-container">
-  <div ng-repeat="provider in dashboardProviders">
-    <view provider="provider" vars="dashboardVars" />
+    <div class="view-pills" id="cockpit.processDefinition.view"></div>
   </div>
+
+  <div class="ctn-content-container">
+    <div ng-repeat="provider in dashboardProviders">
+      <view provider="provider" vars="dashboardVars" />
+    </div>
+  </div>
+
 </div>
