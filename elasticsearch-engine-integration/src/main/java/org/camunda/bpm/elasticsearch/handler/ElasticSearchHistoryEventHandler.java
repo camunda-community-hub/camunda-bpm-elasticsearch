@@ -17,7 +17,6 @@
 package org.camunda.bpm.elasticsearch.handler;
 
 import org.camunda.bpm.elasticsearch.ElasticSearchHistoryPluginConfiguration;
-import org.camunda.bpm.elasticsearch.index.ElasticSearchIndexStrategy;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 import org.camunda.bpm.engine.impl.history.handler.HistoryEventHandler;
@@ -30,7 +29,6 @@ public abstract class ElasticSearchHistoryEventHandler implements HistoryEventHa
   protected Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
   protected ElasticSearchHistoryPluginConfiguration historyPluginConfiguration;
-  protected ElasticSearchIndexStrategy indexingStrategy;
   protected ProcessEngineConfigurationImpl processEngineConfiguration;
 
   @Override
@@ -40,14 +38,6 @@ public abstract class ElasticSearchHistoryEventHandler implements HistoryEventHa
     for (HistoryEvent historyEvent : historyEvents) {
       handleEvent(historyEvent);
     }
-  }
-
-  public ElasticSearchIndexStrategy getIndexingStrategy() {
-    return indexingStrategy;
-  }
-
-  public void setIndexingStrategy(ElasticSearchIndexStrategy indexingStrategy) {
-    this.indexingStrategy = indexingStrategy;
   }
 
   public void setProcessEngineConfiguration(ProcessEngineConfigurationImpl processEngineConfiguration) {

@@ -16,16 +16,19 @@
 
 package org.camunda.bpm.elasticsearch;
 
+import java.util.ArrayList;
+import java.util.logging.Logger;
+
 import org.camunda.bpm.elasticsearch.handler.ElasticSearchHistoryEventHandler;
 import org.camunda.bpm.elasticsearch.handler.ElasticSearchTransactionAwareHistoryEventHandler;
 import org.camunda.bpm.elasticsearch.index.ElasticSearchDefaultIndexStrategy;
 import org.camunda.bpm.elasticsearch.index.ElasticSearchIndexStrategy;
+import org.camunda.bpm.elasticsearch.session.ElasticSearchSessionFactory;
 import org.camunda.bpm.elasticsearch.util.ClassUtil;
 import org.camunda.bpm.elasticsearch.util.ElasticSearchHelper;
 import org.camunda.bpm.engine.impl.cfg.AbstractProcessEnginePlugin;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
-
-import java.util.logging.Logger;
+import org.camunda.bpm.engine.impl.interceptor.SessionFactory;
 
 public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
 
@@ -70,8 +73,12 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
     Class<? extends ElasticSearchHistoryEventHandler> historyEventHandlerClass =
         ClassUtil.loadClass(historyPluginConfiguration.getEventHandler(), null, ElasticSearchHistoryEventHandler.class);
     historyEventHandler = ClassUtil.createInstance(historyEventHandlerClass);
-    historyEventHandler.setIndexingStrategy(indexingStrategy);
     historyEventHandler.setProcessEngineConfiguration(processEngineConfiguration);
+
+    if(processEngineConfiguration.getCustomSessionFactories() == null) {
+      processEngineConfiguration.setCustomSessionFactories(new ArrayList<SessionFactory>());
+    }
+    processEngineConfiguration.getCustomSessionFactories().add(new ElasticSearchSessionFactory(indexingStrategy));
 
     validateHistoryPluginConfig();
 

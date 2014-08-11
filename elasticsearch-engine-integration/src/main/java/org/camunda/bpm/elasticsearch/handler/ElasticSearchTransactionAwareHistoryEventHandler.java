@@ -16,40 +16,28 @@
 
 package org.camunda.bpm.elasticsearch.handler;
 
-import org.camunda.bpm.engine.impl.cfg.TransactionContext;
-import org.camunda.bpm.engine.impl.cfg.TransactionState;
+import org.camunda.bpm.elasticsearch.session.ElasticSearchSession;
 import org.camunda.bpm.engine.impl.context.Context;
 import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 
-import java.util.HashMap;
-
+/**
+ * {@link ElasticSearchHistoryEventHandler} implementation which adds the event to the current {@link ElasticSearchSession}.
+ * The ElasticSearchSession is opened once per command and batches all events fired until the session is closed.
+ *
+ * @author Christian Lipphardt
+ * @author Daniel Meyer
+ *
+ */
 public class ElasticSearchTransactionAwareHistoryEventHandler extends ElasticSearchHistoryEventHandler {
 
-  protected HashMap<TransactionContext, ElasticSearchEngineTransactionListener> transactionListeners = new HashMap<TransactionContext, ElasticSearchEngineTransactionListener>();
-
-  @Override
   public void handleEvent(HistoryEvent historyEvent) {
-    registerTransactionListener(historyEvent);
+
+    // get or create current ElasticSearchSession
+    ElasticSearchSession elasticSearchSession = Context.getCommandContext()
+      .getSession(ElasticSearchSession.class);
+
+    // add event to elastic search session.
+    elasticSearchSession.addHistoryEvent(historyEvent);
   }
 
-  protected void registerTransactionListener(HistoryEvent historyEvent) {
-    TransactionContext transactionContext = Context.getCommandContext()
-        .getTransactionContext();
-
-    ElasticSearchEngineTransactionListener transactionListener = transactionListeners.get(transactionContext);
-
-    if (transactionListener == null) {
-      transactionListener = new ElasticSearchEngineTransactionListener(this, transactionContext);
-      transactionContext.addTransactionListener(TransactionState.COMMITTED, transactionListener);
-      transactionListeners.put(transactionContext, transactionListener);
-    }
-
-    transactionListener.addHistoryEvent(historyEvent);
-  }
-
-  public void removeTransactionListener(TransactionContext transactionContext) {
-    if (transactionListeners.containsKey(transactionContext)) {
-      transactionListeners.remove(transactionContext);
-    }
-  }
 }
