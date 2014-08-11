@@ -56,4 +56,10 @@
   <bean id="taskService" factory-bean="processEngine" factory-method="getTaskService" />
   <bean id="historyService" factory-bean="processEngine" factory-method="getHistoryService" />
   <bean id="managementService" factory-bean="processEngine" factory-method="getManagementService" />
+
+  <!-- demo data generator -->
+  <bean class="org.camunda.bpm.extension.elasticsearch.cockpit.demodata.DemoDataGenerator">
+    <property name="processEngine" ref="processEngine"></property>
+  </bean>
+
 </beans>
