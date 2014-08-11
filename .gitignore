@@ -20,3 +20,6 @@
 # Generated folders #
 distro
 target
+
+# Generated files
+test*.json

@@ -119,15 +119,25 @@
         <filtering>true</filtering>
       </testResource>
     </testResources>
+
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <redirectTestOutputToFile>true</redirectTestOutputToFile>
+        </configuration>
+      </plugin>
+    </plugins>
   </build>
 
   <profiles>
     <profile>
       <id>remote-es</id>
       <properties>
-        <es.path.logs></es.path.logs>
-        <es.path.data></es.path.data>
-        <es.path.work></es.path.work>
+        <es.path.logs>${project.basedir}/elasticsearch/logs</es.path.logs>
+        <es.path.data>${project.basedir}/elasticsearch/data</es.path.data>
+        <es.path.work>${project.basedir}/elasticsearch/work</es.path.work>
       </properties>
       <build>
         <plugins>
@@ -154,6 +164,7 @@
                     <echo message="updating configuration to use remote elasticsearch cluster" />
                     <copy file="target/test-classes/camunda-bpm-elasticsearch-remote.json" tofile="target/test-classes/camunda-bpm-elasticsearch.json" overwrite="true" />
                     <copy file="target/test-classes/config/elasticsearch-test-remote.yml" tofile="target/test-classes/config/elasticsearch-test.yml" overwrite="true" />
+                    <copy file="target/test-classes/camunda.cfg.remote.xml" tofile="target/test-classes/camunda.cfg.xml" overwrite="true" />
                   </tasks>
                 </configuration>
               </execution>

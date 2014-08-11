@@ -7,6 +7,11 @@
   "esClusterName": "camunda_bpm_es_cluster",
   "transportClient": false,
   "properties": {
-    "es.node.local" : false
+    "es.node.local" : false,
+    "es.path.logs" : "${es.path.logs}",
+    "es.path.data" : "${es.path.data}",
+    "es.path.work" : "${es.path.work}",
+    "es.index.number_of_shards" : "1",
+    "es.index.number_of_replicas" : "0"
   }
 }
