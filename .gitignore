@@ -9,6 +9,14 @@
 .idea
 *.iml
 
+# eclipse files #
+.classpath
+.project
+.settings
+
+# vim #
+.swp
+
 # Generated folders #
 distro
 target
