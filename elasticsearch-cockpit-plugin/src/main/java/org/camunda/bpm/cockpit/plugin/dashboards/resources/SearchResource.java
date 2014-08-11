@@ -12,21 +12,31 @@
  */
 package org.camunda.bpm.cockpit.plugin.dashboards.resources;
 
-import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
+import java.util.ArrayList;
+import java.util.List;
 
-import org.camunda.bpm.cockpit.plugin.dashboards.DashboardsPlugin;
-import org.camunda.bpm.cockpit.plugin.resource.AbstractCockpitPluginRootResource;
+import javax.ws.rs.GET;
+import javax.ws.rs.QueryParam;
 
-@Path("plugin/" + DashboardsPlugin.ID)
-public class DashboardsRootResource extends AbstractCockpitPluginRootResource {
+import org.camunda.bpm.cockpit.plugin.resource.AbstractCockpitPluginResource;
+import org.camunda.bpm.engine.rest.dto.runtime.ProcessInstanceDto;
 
-  public DashboardsRootResource() {
-    super(DashboardsPlugin.ID);
+/**
+ * @author Daniel Meyer
+ *
+ */
+public class SearchResource extends AbstractCockpitPluginResource {
+
+  public static final String PATH = "/search";
+
+  public SearchResource(String engineName) {
+    super(engineName);
   }
 
-  @Path("{engineName}"+SearchResource.PATH)
-  public SearchResource search(@PathParam("engineName") String engineName) {
-    return subResource(new SearchResource(engineName), engineName);
+  @GET
+  public List<ProcessInstanceDto> doSearch(@QueryParam("query") String query) {
+    // TODO: search :)
+    return new ArrayList<ProcessInstanceDto>();
   }
+
 }
