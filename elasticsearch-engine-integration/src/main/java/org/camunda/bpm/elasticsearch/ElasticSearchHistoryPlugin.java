@@ -188,4 +188,8 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
     this.dataNode = dataNode;
   }
 
+  public ElasticSearchClient getElasticSearchClient() {
+    return elasticSearchClient;
+  }
+
 }
