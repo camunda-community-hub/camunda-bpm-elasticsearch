@@ -58,13 +58,14 @@ public class HistoryEventsIndexingTest extends AbstractElasticSearchTest {
 
     SearchRequestBuilder searchRequestBuilder = client.prepareSearch(ES_DEFAULT_INDEX_NAME_CAMUNDA_BPM)
         .setQuery(query);
+//        .addFields("processInstanceId", "processDefinitionId")
+//        .setFetchSource("processInstanceId", "processDefinitionId");
 
     IoUtil.writeToFile(searchRequestBuilder.toString(), "test.json", true);
 
     SearchResponse searchResponse = searchRequestBuilder.get();
     SearchHits hits = searchResponse.getHits();
     assertEquals(1, hits.totalHits());
-
 
     SearchHit hit = hits.getAt(0);
     assertEquals(pids[0], hit.getId());

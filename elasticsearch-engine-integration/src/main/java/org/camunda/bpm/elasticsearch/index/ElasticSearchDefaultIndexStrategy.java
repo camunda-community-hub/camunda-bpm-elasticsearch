@@ -44,8 +44,7 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
       "if (isActivityInstanceEvent) { if (ctx._source.containsKey(\"activities\")) { ctx._source.activities += value } else { ctx._source.activities = value } };" +
       "if (isTaskInstanceEvent) { if (ctx._source.containsKey(\"tasks\")) { ctx._source.tasks += value } else { ctx._source.tasks = value } };" +
       "if (isVariableUpdateEvent) { if (ctx._source.containsKey(\"variables\")) { ctx._source.variables += value } else { ctx._source.variables = value } };" +
-      "if (isIncidentUpdateEvent) { if (ctx._source.containsKey(\"incidents\")) { ctx._source.incidents += value } else { ctx._source.incidents = value } };" +
-      "if (isVariableUpdateEvent) { if (ctx._source.containsKey(\"variables\")) { ctx._source.variables += value } else { ctx._source.variables = value } };";
+      "if (isIncidentUpdateEvent) { if (ctx._source.containsKey(\"incidents\")) { ctx._source.incidents += value } else { ctx._source.incidents = value } };";
   protected static final int WAIT_FOR_RESPONSE = 5;
 
   public void executeRequest(List<HistoryEvent> historyEvents) {
