@@ -15,21 +15,22 @@
   </condition>
   <!-- maybe check JBOSS_HOME env var and check for existance of directory -->
 
-  <property name="version.camunda-bpm" value="7.1.0-SNAPSHOT" />
+  <property name="version.camunda-bpm" value="7.1.0-Final" />
   <property name="version.tomcat" value="7.0.50" />
   <property name="version.jboss" value="7.2.0.Final" />
-  <property name="version.elasticsearch" value="1.1.0" />
+  <property name="version.elasticsearch" value="1.3.1" />
   <property name="elasticsearch.dir" value="elasticsearch-${version.elasticsearch}" />
   <property name="elasticsearch.file" value="${elasticsearch.dir}.${archive.type}" />
   <property name="elasticsearch.url" value="https://download.elasticsearch.org/elasticsearch/elasticsearch/${elasticsearch.file}" />
 
   <!-- logstash download https://download.elasticsearch.org/logstash/logstash/logstash-1.4.0.zip -->
   <!-- kibana download https://download.elasticsearch.org/kibana/kibana/kibana-3.0.0.zip -->
+  <property name="kibana.url" value="https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.${archive.type}" />
 
-  <property name="distro" value="jboss" /> <!-- or tomcat -->
+  <property name="distro" value="tomcat" /> <!-- jboss or tomcat -->
   <property name="distro.dir" value="camunda-${distro}" />
   <property name="distro.file" value="camunda-bpm-${distro}-${version.camunda-bpm}.tar.gz" />
-  <property name="distro.url" value="http://camunda.org/release/camunda-bpm/${distro}/7.0/${distro.file}" />
+  <property name="distro.url" value="http://camunda.org/release/camunda-bpm/${distro}/7.1/${distro.file}" />
 
   <property name="deploy.dir" value="${basedir}/distro" />
   <!--<property name="deploy.jboss.dir" value="/home/hawky4s/projects/own/camunda-jboss/server/jboss-as-7.2.0.Final" />-->
@@ -42,12 +43,15 @@
     <equals arg1="${distro}" arg2="jboss" casesensitive="false" forcestring="true" trim="true" />
   </condition>
 
+  <target name="init">
+    <mkdir dir="${deploy.dir}" />
+  </target>
 
 	<target name="package.mvn">
-	    <exec executable="${mvn.executable}" dir="${basedir}" failonerror="true">
-	      <env key="MAVEN_OPTS" value="-Xmx1024m -Xms512m"/>
-	      <arg line="clean package -DskipTests=${skipTests}" />
-	    </exec>
+    <exec executable="${mvn.executable}" dir="${basedir}" failonerror="true">
+      <env key="MAVEN_OPTS" value="-Xmx1024m -Xms512m"/>
+      <arg line="clean package -DskipTests=${skipTests}" />
+    </exec>
 	</target>
 
 
@@ -88,12 +92,13 @@
   <!--========================== elasticsearch-related ==========================-->
   <available file="${deploy.dir}/${elasticsearch.dir}" type="dir" property="es.exists" />
 
-  <target name="download.elasticsearch">
-    <get src="${elasticsearch.url}" dest="${deploy.dir}/" verbose="false" skipexisting="true" />
+  <target name="download.elasticsearch" depends="init">
+    <get src="${elasticsearch.url}" dest="${deploy.dir}/${elasticsearch.file}" verbose="true" skipexisting="true" />
   </target>
 
   <target name="unpack.elasticsearch.unix" if="linuxos">
     <untar src="${deploy.dir}/${elasticsearch.file}" dest="${deploy.dir}/" compression="gzip" overwrite="false" />
+    <chmod file="${deploy.dir}/${elasticsearch.dir}/bin/**" perm="0755" type="both" />
   </target>
 
   <target name="unpack.elasticsearch.win" unless="linuxos">

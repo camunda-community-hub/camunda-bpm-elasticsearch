@@ -63,7 +63,8 @@ public class ElasticSearchClient {
     } else {
       if (esNode == null) {
         // initialize default settings
-        settingsBuilder.put("node.name", "rocking-camunda-bpm-history")
+        settingsBuilder
+            .put("node.name", "rocking-camunda-bpm-history")
             .put("node.client", true) // make node a client, so it won't become a master
             .put("node.local", false)
             .put("node.data", false)
@@ -78,8 +79,8 @@ public class ElasticSearchClient {
             .settings(settingsBuilder)
             .build();
 
-        if (LOGGER.isLoggable(Level.FINE)) {
-          LOGGER.fine("Initialized node with settings: " + esNode.settings().getAsMap().toString());
+        if (LOGGER.isLoggable(Level.INFO)) {
+          LOGGER.info("Initialized node with settings: " + esNode.settings().getAsMap().toString());
         }
 
         esNode.start();

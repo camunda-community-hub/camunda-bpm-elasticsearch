@@ -21,7 +21,7 @@ import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
 import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 import org.camunda.bpm.engine.impl.history.handler.DbHistoryEventHandler;
 
-public class ElasticSearchTransactionAwareCompositeEventHandler extends AbstractElasticSearchHistoryEventHandler {
+public class ElasticSearchTransactionAwareCompositeEventHandler extends ElasticSearchHistoryEventHandler {
 
   protected DbHistoryEventHandler dbHistoryEventHandler = new DbHistoryEventHandler();
   protected ElasticSearchTransactionAwareHistoryEventHandler elasticSearchTransactionAwareHistoryEventHandler = new ElasticSearchTransactionAwareHistoryEventHandler();

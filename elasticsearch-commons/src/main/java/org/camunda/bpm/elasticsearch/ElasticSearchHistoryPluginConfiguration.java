@@ -134,8 +134,34 @@ public class ElasticSearchHistoryPluginConfiguration {
     this.eventHandler = eventHandler;
   }
 
+  public void validate() {
+    StringBuilder sb = new StringBuilder();
+
+    if (getEsClusterName() == null || getEsClusterName().isEmpty()) {
+
+    }
+    if (getEsHost() == null || getEsHost().isEmpty()) {
+
+    }
+    if (getEsPort() == null || getEsPort().isEmpty()) {
+
+    }
+    if (getIndex() == null || getIndex().isEmpty()) {
+
+    }
+    if (getType() == null || getType().isEmpty()) {
+
+    }
+    if (getIndexingStrategy() == null || getIndexingStrategy().isEmpty()) {
+
+    }
+    if (getEventHandler() == null || getEventHandler().isEmpty()) {
+
+    }
+  }
+
   public static ElasticSearchHistoryPluginConfiguration readConfigurationFromClasspath() {
-    return JsonHelper.readJsonFromClasspath(ElasticSearchHistoryPluginConfiguration.class, ES_CAM_BPM_CONFIGURATION);
+    return readConfigurationFromClasspath(ES_CAM_BPM_CONFIGURATION);
   }
 
   public static ElasticSearchHistoryPluginConfiguration readConfigurationFromClasspath(String fileName) {

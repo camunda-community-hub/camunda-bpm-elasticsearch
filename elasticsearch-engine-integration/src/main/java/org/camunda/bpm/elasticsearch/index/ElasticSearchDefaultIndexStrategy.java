@@ -27,6 +27,7 @@ import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 import org.elasticsearch.action.update.UpdateRequestBuilder;
 import org.elasticsearch.action.update.UpdateResponse;
 import org.elasticsearch.common.unit.TimeValue;
+import org.elasticsearch.script.ScriptService;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -42,6 +43,8 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
   protected static final String ES_INDEX_UPDATE_SCRIPT =
       "if (isActivityInstanceEvent) { if (ctx._source.containsKey(\"activities\")) { ctx._source.activities += value } else { ctx._source.activities = value } };" +
       "if (isTaskInstanceEvent) { if (ctx._source.containsKey(\"tasks\")) { ctx._source.tasks += value } else { ctx._source.tasks = value } };" +
+      "if (isVariableUpdateEvent) { if (ctx._source.containsKey(\"variables\")) { ctx._source.variables += value } else { ctx._source.variables = value } };" +
+      "if (isIncidentUpdateEvent) { if (ctx._source.containsKey(\"incidents\")) { ctx._source.incidents += value } else { ctx._source.incidents = value } };" +
       "if (isVariableUpdateEvent) { if (ctx._source.containsKey(\"variables\")) { ctx._source.variables += value } else { ctx._source.variables = value } };";
   protected static final int WAIT_FOR_RESPONSE = 5;
 
@@ -53,6 +56,10 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
 
   public void executeRequest(HistoryEvent historyEvent) {
     try {
+      if (filterEvents(historyEvent)) {
+        return;
+      }
+
       UpdateRequestBuilder updateRequestBuilder = prepareUpdateRequest(historyEvent);
 
       if (LOGGER.isLoggable(Level.FINE)) {
@@ -77,6 +84,16 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
     }
   }
 
+  protected boolean filterEvents(HistoryEvent historyEvent) {
+    if (historyEvent instanceof HistoricProcessInstanceEventEntity ||
+        historyEvent instanceof HistoricActivityInstanceEventEntity ||
+        historyEvent instanceof HistoricTaskInstanceEventEntity ||
+        historyEvent instanceof HistoricVariableUpdateEventEntity) {
+      return false;
+    }
+    return true;
+  }
+
   protected UpdateRequestBuilder prepareUpdateRequest(HistoryEvent historyEvent) throws IOException {
     UpdateRequestBuilder updateRequestBuilder = esClient.prepareUpdate()
         .setIndex(dispatcher.getDispatchTargetIndex(historyEvent))
@@ -96,6 +113,7 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
     } else {
       // unknown event - insert...
       throw new IllegalArgumentException("Unknown event detected: '" + historyEvent + "'");
+//      LOGGER.warning("Unknown event detected: '" + historyEvent + "'");
     }
 
     if (LOGGER.isLoggable(Level.FINE)) {
@@ -123,14 +141,17 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
       scriptParams.put("isActivityInstanceEvent", true);
       scriptParams.put("isTaskInstanceEvent", false);
       scriptParams.put("isVariableUpdateEvent", false);
+      scriptParams.put("isIncidentUpdateEvent", false);
     } else if (historyEvent instanceof HistoricTaskInstanceEventEntity) {
       scriptParams.put("isActivityInstanceEvent", false);
       scriptParams.put("isTaskInstanceEvent", true);
       scriptParams.put("isVariableUpdateEvent", false);
+      scriptParams.put("isIncidentUpdateEvent", false);
     } else {
       scriptParams.put("isActivityInstanceEvent", false);
       scriptParams.put("isTaskInstanceEvent", false);
       scriptParams.put("isVariableUpdateEvent", true);
+      scriptParams.put("isIncidentUpdateEvent", false);
     }
 
     String eventJson = transformer.transformToJson(historyEvent);
@@ -138,7 +159,8 @@ public class ElasticSearchDefaultIndexStrategy extends ElasticSearchIndexStrateg
     List<Map<String,Object>> events = transformer.transformJsonToList("[" + eventJson + "]");
     scriptParams.put("value", events);
 
-    updateRequestBuilder.setScript(ES_INDEX_UPDATE_SCRIPT).setScriptParams(scriptParams);
+    updateRequestBuilder.setScript(ES_INDEX_UPDATE_SCRIPT, ScriptService.ScriptType.INLINE)
+        .setScriptParams(scriptParams);
 
     return updateRequestBuilder;
   }

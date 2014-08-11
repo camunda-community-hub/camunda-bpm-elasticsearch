@@ -4,7 +4,7 @@
   "indexingStrategy": "org.camunda.bpm.elasticsearch.index.ElasticSearchDefaultIndexStrategy",
   "esHost": "localhost",
   "esPort": "9300",
-  "esClusterName": "elasticsearch-test-cluster",
+  "esClusterName": "camunda_bpm_es_cluster",
   "transportClient": false,
   "properties": {
     "es.node.local" : true,

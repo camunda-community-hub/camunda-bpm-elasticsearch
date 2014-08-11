@@ -16,33 +16,34 @@
 
 package org.camunda.bpm.elasticsearch;
 
-import org.camunda.bpm.elasticsearch.handler.AbstractElasticSearchHistoryEventHandler;
+import org.camunda.bpm.elasticsearch.handler.ElasticSearchHistoryEventHandler;
 import org.camunda.bpm.elasticsearch.handler.ElasticSearchTransactionAwareHistoryEventHandler;
 import org.camunda.bpm.elasticsearch.index.ElasticSearchDefaultIndexStrategy;
 import org.camunda.bpm.elasticsearch.index.ElasticSearchIndexStrategy;
 import org.camunda.bpm.elasticsearch.util.ClassUtil;
 import org.camunda.bpm.elasticsearch.util.ElasticSearchHelper;
-import org.camunda.bpm.engine.ProcessEngine;
+import org.camunda.bpm.engine.impl.cfg.AbstractProcessEnginePlugin;
 import org.camunda.bpm.engine.impl.cfg.ProcessEngineConfigurationImpl;
-import org.camunda.bpm.engine.impl.cfg.ProcessEnginePlugin;
 
 import java.util.logging.Logger;
 
-public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
+public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
 
   protected static final Logger LOGGER = Logger.getLogger(ElasticSearchHistoryPlugin.class.getName());
 
   public static final String ES_DEFAULT_HISTORY_EVENT_HANDLER = ElasticSearchTransactionAwareHistoryEventHandler.class.getName();
   public static final String ES_DEFAULT_HISTORY_INDEXING_STRATEGY = ElasticSearchDefaultIndexStrategy.class.getName();
 
-  protected AbstractElasticSearchHistoryEventHandler historyEventHandler;
+  protected ElasticSearchHistoryEventHandler historyEventHandler;
   protected ElasticSearchHistoryPluginConfiguration historyPluginConfiguration;
   protected ElasticSearchClient elasticSearchClient;
 
-  protected String esHost = "localhost";
-  protected String esPort = "9300";
-  protected String esIndexingStrategy = "";
-  protected String esEventHandler = "";
+  protected String esCluster = null;
+  protected String esHost = null;
+  protected String esPort = null;
+  protected String esIndex = null;
+  protected String esIndexingStrategy = ES_DEFAULT_HISTORY_INDEXING_STRATEGY;
+  protected String esEventHandler = ES_DEFAULT_HISTORY_EVENT_HANDLER;
   protected boolean clientNode = true;
   protected boolean localNode = false;
   protected boolean dataNode = false;
@@ -51,15 +52,14 @@ public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
   public void preInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
     historyPluginConfiguration = ElasticSearchHistoryPluginConfiguration.readConfigurationFromClasspath();
 
-    historyPluginConfiguration.getProperties().put("es.node.client", clientNode);
-    historyPluginConfiguration.getProperties().put("es.node.local", localNode);
-    historyPluginConfiguration.getProperties().put("es.node.data", dataNode);
+    setHistoryPluginConfigurationProperties(historyPluginConfiguration);
 
     // retrieve indexing strategy
     Class<? extends ElasticSearchIndexStrategy> indexingStrategyClass =
         ClassUtil.loadClass(historyPluginConfiguration.getIndexingStrategy(), null, ElasticSearchIndexStrategy.class);
     ElasticSearchIndexStrategy indexingStrategy = ClassUtil.createInstance(indexingStrategyClass);
 
+    // create es client
     elasticSearchClient = new ElasticSearchClient(historyPluginConfiguration);
     indexingStrategy.setEsClient(elasticSearchClient.get());
 
@@ -67,26 +67,95 @@ public class ElasticSearchHistoryPlugin implements ProcessEnginePlugin {
       historyPluginConfiguration.setEventHandler(ES_DEFAULT_HISTORY_EVENT_HANDLER);
     }
 
-    Class<? extends AbstractElasticSearchHistoryEventHandler> historyEventHandlerClass =
-        ClassUtil.loadClass(historyPluginConfiguration.getEventHandler(), null, AbstractElasticSearchHistoryEventHandler.class);
+    Class<? extends ElasticSearchHistoryEventHandler> historyEventHandlerClass =
+        ClassUtil.loadClass(historyPluginConfiguration.getEventHandler(), null, ElasticSearchHistoryEventHandler.class);
     historyEventHandler = ClassUtil.createInstance(historyEventHandlerClass);
     historyEventHandler.setIndexingStrategy(indexingStrategy);
     historyEventHandler.setProcessEngineConfiguration(processEngineConfiguration);
 
-    ElasticSearchHelper.checkIndex(elasticSearchClient.get(), historyPluginConfiguration.getIndex());
-    ElasticSearchHelper.checkTypeAndMapping(elasticSearchClient.get(), historyPluginConfiguration.getIndex(), historyPluginConfiguration.getType());
+    validateHistoryPluginConfig();
 
     processEngineConfiguration.setHistoryEventHandler(historyEventHandler);
   }
 
-  @Override
-  public void postInit(ProcessEngineConfigurationImpl processEngineConfiguration) {
+  protected void validateHistoryPluginConfig() {
+    historyPluginConfiguration.validate();
+    ElasticSearchHelper.checkIndex(elasticSearchClient.get(), historyPluginConfiguration.getIndex());
+    ElasticSearchHelper.checkTypeAndMapping(elasticSearchClient.get(), historyPluginConfiguration.getIndex(), historyPluginConfiguration.getType());
   }
 
-  @Override
-  public void postProcessEngineBuild(ProcessEngine processEngine) {
+  protected void setHistoryPluginConfigurationProperties(ElasticSearchHistoryPluginConfiguration historyPluginConfiguration) {
+    if (esCluster == null || esCluster.isEmpty()) {
+      historyPluginConfiguration.setEsClusterName(esCluster);
+    }
+    if (esHost != null && !esHost.isEmpty()) {
+      historyPluginConfiguration.setEsHost(esHost);
+    }
+    if (esPort != null && !esPort.isEmpty()) {
+      historyPluginConfiguration.setEsPort(esPort);
+    }
+    if (esIndex != null && !esIndex.isEmpty()) {
+      historyPluginConfiguration.setIndex(esIndex);
+    }
+    if (esIndexingStrategy != null && !esIndexingStrategy.isEmpty()) {
+      historyPluginConfiguration.setIndexingStrategy(esIndexingStrategy);
+    }
+    if (esEventHandler != null && !esEventHandler.isEmpty()) {
+      historyPluginConfiguration.setEventHandler(esEventHandler);
+    }
+
+    historyPluginConfiguration.getProperties().put("es.node.client", clientNode);
+    historyPluginConfiguration.getProperties().put("es.node.local", localNode);
+    historyPluginConfiguration.getProperties().put("es.node.data", dataNode);
   }
 
+  public String getEsEventHandler() {
+    return esEventHandler;
+  }
+
+  public void setEsEventHandler(String esEventHandler) {
+    this.esEventHandler = esEventHandler;
+  }
+
+  public String getEsIndexingStrategy() {
+    return esIndexingStrategy;
+  }
+
+  public void setEsIndexingStrategy(String esIndexingStrategy) {
+    this.esIndexingStrategy = esIndexingStrategy;
+  }
+
+  public String getEsIndex() {
+    return esIndex;
+  }
+
+  public void setEsIndex(String esIndex) {
+    this.esIndex = esIndex;
+  }
+
+  public String getEsPort() {
+    return esPort;
+  }
+
+  public void setEsPort(String esPort) {
+    this.esPort = esPort;
+  }
+
+  public String getEsHost() {
+    return esHost;
+  }
+
+  public void setEsHost(String esHost) {
+    this.esHost = esHost;
+  }
+
+  public String getEsCluster() {
+    return esCluster;
+  }
+
+  public void setEsCluster(String esCluster) {
+    this.esCluster = esCluster;
+  }
 
   public boolean isClientNode() {
     return clientNode;

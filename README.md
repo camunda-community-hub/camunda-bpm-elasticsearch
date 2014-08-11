@@ -30,6 +30,7 @@ How to use
 ----------
 Requirements:
 An ElasticSearch installation reachable from Application Server.
+Dynamic scripting enabled through script.disable_dynamic: false (required since elasticsearch 1.2)
 
 Drop libs into JBoss / Tomcat
 Configure process engine plugin for your process engine in application server (JBoss: standalone.xml / Tomcat: bpm-platform.xml)

@@ -45,7 +45,9 @@
 
     <property name="processEnginePlugins">
       <list>
-        <bean class="org.camunda.bpm.elasticsearch.ElasticSearchHistoryPlugin" />
+        <bean class="org.camunda.bpm.elasticsearch.ElasticSearchHistoryPlugin">
+          <property name="localNode" value="true" />
+        </bean>
       </list>
     </property>
 

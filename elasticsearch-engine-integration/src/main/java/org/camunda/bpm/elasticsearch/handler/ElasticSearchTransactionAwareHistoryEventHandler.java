@@ -23,7 +23,7 @@ import org.camunda.bpm.engine.impl.history.event.HistoryEvent;
 
 import java.util.HashMap;
 
-public class ElasticSearchTransactionAwareHistoryEventHandler extends AbstractElasticSearchHistoryEventHandler {
+public class ElasticSearchTransactionAwareHistoryEventHandler extends ElasticSearchHistoryEventHandler {
 
   protected HashMap<TransactionContext, ElasticSearchEngineTransactionListener> transactionListeners = new HashMap<TransactionContext, ElasticSearchEngineTransactionListener>();
 

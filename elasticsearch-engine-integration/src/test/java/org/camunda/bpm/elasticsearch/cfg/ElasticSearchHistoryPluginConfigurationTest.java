@@ -46,7 +46,7 @@ public class ElasticSearchHistoryPluginConfigurationTest {
 
     assertEquals("localhost", historyPluginConfiguration.getEsHost());
     assertEquals("9300", historyPluginConfiguration.getEsPort());
-    assertEquals("elasticsearch-test-cluster", historyPluginConfiguration.getEsClusterName());
+    assertEquals("camunda-bpm-es-cluster", historyPluginConfiguration.getEsClusterName());
     assertFalse(historyPluginConfiguration.isTransportClient());
 
     // check properties

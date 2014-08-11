@@ -19,7 +19,9 @@ package org.camunda.bpm.elasticsearch.query;
 import org.camunda.bpm.elasticsearch.AbstractElasticSearchTest;
 import org.camunda.bpm.elasticsearch.ProcessDataContainer;
 import org.camunda.bpm.elasticsearch.TestDataGenerator;
+import org.camunda.bpm.engine.test.ProcessEngineRule;
 import org.junit.Ignore;
+import org.junit.Rule;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -31,7 +33,7 @@ public class HistoryEventsQueryTest extends AbstractElasticSearchTest {
   public void queryShouldFindProcessInstanceViaVariableValue() {
     HashMap<String,ProcessDataContainer> stringProcessDataContainerHashMap = TestDataGenerator.startInvoiceProcess(processEngineRule.getProcessEngine(), 10);
 
-    flushAndRefresh();
+//    flushAndRefresh();
 
 //    QueryBuilders.boolQuery().must(QueryBuilders.nestedQuery(""))
 //    SearchRequestBuilder srb = client.prepareSearch().setQuery();

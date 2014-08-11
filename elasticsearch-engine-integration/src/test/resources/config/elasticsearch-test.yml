@@ -4,3 +4,5 @@ node.data : true
 node.http.enabled : true
 discovery.zen.ping.multicast.enabled : false
 network.host : _local_
+script.disable_dynamic : false
+cluster.name : camunda_bpm_es_cluster

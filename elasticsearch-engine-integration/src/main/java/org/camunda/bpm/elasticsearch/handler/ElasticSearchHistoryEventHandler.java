@@ -25,7 +25,7 @@ import org.camunda.bpm.engine.impl.history.handler.HistoryEventHandler;
 import java.util.List;
 import java.util.logging.Logger;
 
-public abstract class AbstractElasticSearchHistoryEventHandler implements HistoryEventHandler {
+public abstract class ElasticSearchHistoryEventHandler implements HistoryEventHandler {
 
   protected Logger LOGGER = Logger.getLogger(this.getClass().getName());
 
@@ -40,7 +40,7 @@ public abstract class AbstractElasticSearchHistoryEventHandler implements Histor
     for (HistoryEvent historyEvent : historyEvents) {
       handleEvent(historyEvent);
     }
-  };
+  }
 
   public ElasticSearchIndexStrategy getIndexingStrategy() {
     return indexingStrategy;
