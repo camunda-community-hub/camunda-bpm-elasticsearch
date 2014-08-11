@@ -43,10 +43,6 @@ public class ElasticSearchClient {
   }
 
   protected Client init() {
-    // network.host : 10.0.0.4  // bind to which host
-    // path.logs : /var/log/elasticsearch
-    // path.data : /var/data/elasticsearch
-    // index.store.type : memory // store in memory only
     Client client = null;
 
     ImmutableSettings.Builder settingsBuilder = ImmutableSettings.builder()
