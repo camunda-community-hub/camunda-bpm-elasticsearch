@@ -4,31 +4,13 @@ ngDefine('dashboards.pages.activityMonitor', [
   '../lib/freewall',
   '../lib/d3.min',
   '../lib/nv.d3.min',
-  '../lib/angular-nvd3'
+  'module:nvd3:../lib/angular-nvd3'
 ], function(module, angular, require) {
 
   var Controller = ['$scope', '$http', 'Uri', '$compile',
             function($scope, $http, Uri, $compile) {
 
-    // ACTIVITY MONITORING STUFF
-    var wall = new freewall("#freewall-container");
-    wall.fitWidth();
-
-    $scope.index = 1;
-    $scope.onclickCreate = function(){
-      if ($scope.index<=3){
-        var template = '<nvd3 options="options" data="data"></nvd3>';
-        $('.item:nth-child('+$scope.index+')').append($compile(template)($scope));
-        $scope.index += 1;
-      }
-    };
-    $scope.onclickRemove = function(){
-      var charts = angular.element(document.body).find('nvd3');
-      if (charts.length) {
-        charts[charts.length -1].remove();
-        $scope.index -= 1;
-      }
-    };
+    $('head').append('<link rel="stylesheet" href="'+require.toUrl('../lib/nv.d3.min.css')+'" type="text/css" />');
 
     $scope.options = {
       chart: {
