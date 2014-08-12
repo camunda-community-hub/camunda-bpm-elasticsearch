@@ -1,12 +1,11 @@
-<h1>Quick search</h1>
 
 <form role="form" name"seach-form" ng-submit="doSearch()" class="quick-search">
   <div class="quick-search-bar">
-    <input ng-model="searchString" class="quick-search-bar"></input>
-    <button class="btn btn-primary" type="submit">Search</button>
+    <input ng-model="searchString" class="quick-search-bar" placeholder="Quick Search"></input>
+    <button class="btn btn-primary" type="submit"><i class="icon-search icon-white"></i> Search</button>
     <button class="btn" ng-click="clear()">Clear</button>
   </div>
-  <div>
+  <div class="quick-search-advanced">
     <input type="checkbox" ng-model="includeVariables"></input> Variables
     <input type="checkbox" ng-model="includeTasks"></input> Tasks
     <input type="checkbox" ng-model="includeActivities"></input> Activities
@@ -53,6 +52,9 @@
 .quick-search-bar button {
   width: 100px;
   height: 36px;
+}
+.quick-search-advanced {
+  padding: 10px;
 }
 
 </style>
