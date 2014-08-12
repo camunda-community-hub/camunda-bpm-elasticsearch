@@ -1,9 +1,0 @@
-cluster.name : elasticsearch
-node.name : camundaBpmCockpitHistory
-node.local : false
-node.client : true
-node.data : false
-node.http.enabled : true
-discovery.zen.ping.multicast.enabled : true
-#discovery.zen.ping.unicast.hosts: <your_ip>[9300-9400]
-#network.host : _local_
