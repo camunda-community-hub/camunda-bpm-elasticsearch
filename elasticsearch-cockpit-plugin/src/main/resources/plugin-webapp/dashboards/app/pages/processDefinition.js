@@ -10,6 +10,7 @@ ngDefine('dashboards.pages.processDefinition', [
 
     $scope.exportedVars = { read: [ 'processDefinition' ] };
     $scope.dashboardProviders = Views.getProviders({ component: 'dashboard.processDefinition.view' });
+
   }];
 
   var RouteConfig = [ '$routeProvider', function($routeProvider) {
