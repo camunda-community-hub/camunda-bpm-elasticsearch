@@ -45,6 +45,13 @@
     <property name="localNode" value="true" />
     <property name="dataNode" value="true" />
     <property name="clientNode" value="false" />
+    <property name="esProperties">
+      <map>
+        <entry key="es.path.logs" value="./target/elasticsearch/logs" />
+        <entry key="es.path.data" value="./target/elasticsearch/data" />
+        <entry key="es.path.work" value="./ target/elasticsearch/work" />
+      </map>
+    </property>
   </bean>
 
   <bean id="processEngine" class="org.camunda.bpm.engine.spring.ProcessEngineFactoryBean">
