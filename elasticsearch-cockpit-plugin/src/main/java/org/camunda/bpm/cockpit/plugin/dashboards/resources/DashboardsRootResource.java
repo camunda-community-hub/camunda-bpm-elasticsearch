@@ -29,4 +29,9 @@ public class DashboardsRootResource extends AbstractCockpitPluginRootResource {
   public SearchResource search(@PathParam("engineName") String engineName) {
     return subResource(new SearchResource(engineName), engineName);
   }
+
+  @Path("{engineName}"+ProcessInstanceHistogramResource.PATH)
+  public ProcessInstanceHistogramResource dateHistogram(@PathParam("engineName") String engineName) {
+    return subResource(new ProcessInstanceHistogramResource(engineName), engineName);
+  }
 }

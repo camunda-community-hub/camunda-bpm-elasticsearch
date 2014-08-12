@@ -83,6 +83,8 @@ public class SearchResource extends AbstractCockpitPluginResource {
       .addField("processDefinitionId")
       .setSize(20);
 
+    System.out.println(searchRequestBuilder);
+
     SearchResponse searchResponse = searchRequestBuilder.get();
     SearchHits hits = searchResponse.getHits();
 
