@@ -14,18 +14,12 @@ package org.camunda.bpm.cockpit.plugin.dashboards.resources;
 
 import org.camunda.bpm.cockpit.plugin.ElasticSearchClientProvider;
 import org.camunda.bpm.cockpit.plugin.resource.AbstractCockpitPluginResource;
-import org.camunda.bpm.engine.repository.ProcessDefinition;
 import org.elasticsearch.action.search.SearchRequestBuilder;
 import org.elasticsearch.action.search.SearchResponse;
 import org.elasticsearch.action.search.SearchType;
 import org.elasticsearch.client.Client;
 import org.elasticsearch.index.query.*;
-import org.elasticsearch.search.SearchHit;
-import org.elasticsearch.search.SearchHits;
-import org.elasticsearch.search.aggregations.Aggregation;
-import org.elasticsearch.search.aggregations.AggregationBuilder;
 import org.elasticsearch.search.aggregations.AggregationBuilders;
-import org.elasticsearch.search.aggregations.Aggregations;
 import org.elasticsearch.search.aggregations.bucket.filter.Filter;
 import org.elasticsearch.search.aggregations.bucket.filter.FilterAggregationBuilder;
 import org.elasticsearch.search.aggregations.bucket.histogram.DateHistogram;
@@ -70,7 +64,7 @@ public class ProcessInstanceHistogramResource extends AbstractCockpitPluginResou
       case "q":
       case "y":
       default:
-        dateInterval = DateHistogram.Interval.MINUTE;
+        dateInterval = DateHistogram.Interval.SECOND;
         break;
     }
 

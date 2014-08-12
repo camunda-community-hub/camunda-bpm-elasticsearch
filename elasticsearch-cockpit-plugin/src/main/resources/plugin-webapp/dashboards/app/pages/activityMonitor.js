@@ -7,8 +7,8 @@ ngDefine('dashboards.pages.activityMonitor', [
   'module:nvd3:../lib/angular-nvd3'
 ], function(module, angular, require) {
 
-  var Controller = ['$scope', '$http', 'Uri', '$compile',
-            function($scope, $http, Uri, $compile) {
+  var Controller = ['$scope', '$http', 'Uri', '$compile', '$timeout',
+            function($scope, $http, Uri, $compile, $timeout) {
 
     $('head').append('<link rel="stylesheet" href="'+require.toUrl('../lib/nv.d3.min.css')+'" type="text/css" />');
 
@@ -28,10 +28,10 @@ ngDefine('dashboards.pages.activityMonitor', [
         y: function(bucket){return bucket.docCount;},
         useVoronoi: false,
         clipEdge: true,
-        transitionDuration: 500,
+        transitionDuration: 1,
         useInteractiveGuideline: true,
         xAxis: {
-          showMaxMin: false,
+          showMaxMin: true,
           tickFormat: function(d) {
             return d3.time.format('%x')(new Date(d));
           }
@@ -44,8 +44,9 @@ ngDefine('dashboards.pages.activityMonitor', [
       }
     };
 
-    $scope.data = [];
+
     $scope.getHistogramData = function() {
+
 
       $http({
         method: 'GET',
@@ -55,26 +56,26 @@ ngDefine('dashboards.pages.activityMonitor', [
           timeframe: $scope.timeframe
         }
       }).success(function(data) {
-        histogramData = []
+        histogramData = [];
 
-        running = { "key": "running", "values": [] }
-        ended = { "key": "ended", "values": [] }
 
-        angular.forEach(data.dateHistogramBuckets.running, function(bucket) {
-          this.push(bucket);
-        }, running.values);
+        var values = [];
+
+
+        $scope.data = [];
+        var ended = { "key": "Ended Process Instances", "values": [] };
+        $scope.data.push(ended);
 
         angular.forEach(data.dateHistogramBuckets.ended, function(bucket) {
-          this.push(bucket);
-        }, ended.values);
+          $scope.data[0].values.push(bucket);
+        }, values);
 
-        histogramData.push(running);
-        histogramData.push(ended);
-
-        $scope.data = histogramData;
+        $timeout($scope.getHistogramData, 2000);
       });
 
-    }();
+    };
+
+    $scope.getHistogramData();
   }];
 
   var ViewConfig = [ 'ViewsProvider', function(ViewsProvider) {

@@ -39,7 +39,7 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class DemoDataGenerator implements InitializingBean {
 
-  private static final int maxInstances = 100;
+  private static final int maxInstances = 10;
 
   protected ProcessEngine processEngine;
 
@@ -107,7 +107,7 @@ public class DemoDataGenerator implements InitializingBean {
         // reschedule
         scheduleInstanceStart();
       }
-    }, 5000);
+    }, 1000);
   }
 
 
