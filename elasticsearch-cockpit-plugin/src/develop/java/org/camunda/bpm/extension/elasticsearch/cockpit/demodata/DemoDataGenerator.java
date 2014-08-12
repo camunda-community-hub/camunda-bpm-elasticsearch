@@ -16,6 +16,11 @@ import static org.camunda.bpm.engine.authorization.Authorization.ANY;
 import static org.camunda.bpm.engine.authorization.Authorization.AUTH_TYPE_GRANT;
 import static org.camunda.bpm.engine.authorization.Permissions.ALL;
 
+import java.util.List;
+import java.util.Random;
+import java.util.Timer;
+import java.util.TimerTask;
+
 import org.camunda.bpm.engine.AuthorizationService;
 import org.camunda.bpm.engine.IdentityService;
 import org.camunda.bpm.engine.ProcessEngine;
@@ -25,6 +30,7 @@ import org.camunda.bpm.engine.authorization.Resources;
 import org.camunda.bpm.engine.identity.Group;
 import org.camunda.bpm.engine.identity.User;
 import org.camunda.bpm.engine.impl.persistence.entity.AuthorizationEntity;
+import org.camunda.bpm.engine.task.Task;
 import org.springframework.beans.factory.InitializingBean;
 
 /**
@@ -33,17 +39,15 @@ import org.springframework.beans.factory.InitializingBean;
  */
 public class DemoDataGenerator implements InitializingBean {
 
+  private static final int maxInstances = 100;
+
   protected ProcessEngine processEngine;
 
   public void afterPropertiesSet() throws Exception {
 
     System.out.println("Generating demo data");
 
-    // start 10 process instances
-    for (int i = 0; i < 10; i++) {
-      processEngine.getRuntimeService()
-        .startProcessInstanceByKey("generatedFormsQuickstart");
-    }
+    scheduleInstanceStart();
 
     // ensure admin user exists
     IdentityService identityService = processEngine.getIdentityService();
@@ -78,6 +82,32 @@ public class DemoDataGenerator implements InitializingBean {
       processEngine.getIdentityService()
       .createMembership("demo", Groups.CAMUNDA_ADMIN);
     }
+  }
+
+
+
+  protected void scheduleInstanceStart() {
+    new Timer(true).schedule(new TimerTask() {
+      public void run() {
+
+        // start some process instances
+        int rand = new Random().nextInt(maxInstances);
+        for (int i = 0; i < rand; i++) {
+          processEngine.getRuntimeService().startProcessInstanceByKey("generatedFormsQuickstart");
+        }
+
+        // complete some process instances
+        rand = new Random().nextInt(maxInstances);
+        List<Task> tasks = processEngine.getTaskService().createTaskQuery()
+          .listPage(0, rand);
+        for (Task task : tasks) {
+          processEngine.getTaskService().complete(task.getId());
+        }
+
+        // reschedule
+        scheduleInstanceStart();
+      }
+    }, 5000);
   }
 
 
