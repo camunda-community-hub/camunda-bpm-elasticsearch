@@ -1,33 +1,59 @@
 <h1>Quick search</h1>
 
-<form role="form" name"seach-form" ng-submit="doSearch()">
-  <input ng-model="searchString"></input>
-  <button type="submit">Search</button>
-  <input type="checkbox" ng-model="includeVariables"></input> Variables
-  <input type="checkbox" ng-model="includeTasks"></input> Tasks
-  <input type="checkbox" ng-model="includeActivities"></input> Activities
+<form role="form" name"seach-form" ng-submit="doSearch()" class="quick-search">
+  <div class="quick-search-bar">
+    <input ng-model="searchString" class="quick-search-bar"></input>
+    <button class="btn btn-primary" type="submit">Search</button>
+    <button class="btn" ng-click="clear()">Clear</button>
+  </div>
+  <div>
+    <input type="checkbox" ng-model="includeVariables"></input> Variables
+    <input type="checkbox" ng-model="includeTasks"></input> Tasks
+    <input type="checkbox" ng-model="includeActivities"></input> Activities
+  </div>
 </form>
 
-<h3>Search Results</h3>
+<div ng-show="searchResults.length > 0">
+  <h4>Search Results</h4>
 
-<table class="table table-bordered table-hover table-condensed">
-  <thead>
-    <tr>
-      <th>Id</th>
-      <th>Process</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr data-ng-repeat="processInstance in searchResults">
-      <td>
-        <a href="#/process-instance/{{processInstance.processInstanceId}}/runtime" class="ng-binding">
-          {{processInstance.processInstanceId}}
-        </a>
-      </td>
-      <td>
-        {{processInstance.processDefinitionName}}
-      </td>
-    </tr>
-  </tbody>
-</table>
+  <table class="table table-bordered table-hover table-condensed">
+    <thead>
+      <tr>
+        <th>Id</th>
+        <th>Process</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr data-ng-repeat="processInstance in searchResults">
+        <td>
+          <a href="#/process-instance/{{processInstance.processInstanceId}}/runtime" class="ng-binding">
+            {{processInstance.processInstanceId}}
+          </a>
+        </td>
+        <td>
+          {{processInstance.processDefinitionName}}
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<style>
+.quick-search {
+  width: 100%;
+  text-align:center;
+}
+.quick-search-bar input {
+  width: 40%;
+  min-width: 400px;
+  height: 30px;
+  font-size: 18px;
+  text-align: left;
+}
+.quick-search-bar button {
+  width: 100px;
+  height: 36px;
+}
+
+</style>
 

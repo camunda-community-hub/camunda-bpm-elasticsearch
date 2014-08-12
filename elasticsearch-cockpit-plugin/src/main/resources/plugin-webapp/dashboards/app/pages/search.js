@@ -30,6 +30,11 @@ ngDefine('dashboards.pages.search', [
 
     };
 
+    $scope.clear = function() {
+      $scope.searchResults = [];
+      $scope.searchString = "";
+    };
+
   }];
 
   var ViewConfig = [ 'ViewsProvider', function(ViewsProvider) {

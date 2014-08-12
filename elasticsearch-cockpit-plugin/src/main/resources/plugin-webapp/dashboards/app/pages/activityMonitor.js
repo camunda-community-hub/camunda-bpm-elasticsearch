@@ -15,7 +15,7 @@ ngDefine('dashboards.pages.activityMonitor', [
     $scope.options = {
       chart: {
         type: 'stackedAreaChart',
-        //height: 450,
+        height: 400,
         margin : {
           top: 20,
           right: 20,
