@@ -17,6 +17,8 @@
 package org.camunda.bpm.elasticsearch;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Logger;
 
 import org.camunda.bpm.elasticsearch.handler.ElasticSearchHistoryEventHandler;
@@ -49,6 +51,7 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
   protected String esIndex = null;
   protected String esIndexingStrategy = ES_DEFAULT_HISTORY_INDEXING_STRATEGY;
   protected String esEventHandler = ES_DEFAULT_HISTORY_EVENT_HANDLER;
+  protected Map<String, Object> esProperties = new HashMap<String, Object>();
   protected boolean clientNode = true;
   protected boolean localNode = false;
   protected boolean dataNode = false;
@@ -111,6 +114,9 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
     if (esEventHandler != null && !esEventHandler.isEmpty()) {
       historyPluginConfiguration.setEventHandler(esEventHandler);
     }
+    if (esProperties != null) {
+      historyPluginConfiguration.getProperties().putAll(esProperties);
+    }
 
     historyPluginConfiguration.getProperties().put("es.node.client", clientNode);
     historyPluginConfiguration.getProperties().put("es.node.local", localNode);
@@ -163,6 +169,14 @@ public class ElasticSearchHistoryPlugin extends AbstractProcessEnginePlugin {
 
   public void setEsCluster(String esCluster) {
     this.esCluster = esCluster;
+  }
+
+  public Map<String, Object> getEsProperties() {
+    return esProperties;
+  }
+
+  public void setEsProperties(Map<String, Object> esProperties) {
+    this.esProperties = esProperties;
   }
 
   public boolean isClientNode() {
