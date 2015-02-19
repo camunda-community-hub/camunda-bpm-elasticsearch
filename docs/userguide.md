@@ -2,12 +2,12 @@
 
 ## Overview
 
-The Camunda BPM elastic search extension is a community extension which allows you to use
+The Camunda BPM Elasticsearch extension is a community extension which allows you to use
 Elasticsearch as data store for Camunda history and audit data.
 
 ### Giving it a quick Try
 
-If you want to have a quick look at this project, you can start a running instance of camunda BPM
+If you want to have a quick look at this project, you can start a running instance of Camunda BPM
 with Elasticsearch in the following way:
 
 * Cone the project using git: `git clone https://github.com/camunda/camunda-bpm-elasticsearch.git`
@@ -31,7 +31,7 @@ The Camunda process engine produces a continuous event stream of auditing data (
 being started, tasks being completed, variables being modified and so forth (check the Camunda BPM
 Userguide for a complete list of supported events).
 The Camunda Elasticsearch Extension implements the `HistoryEventHandler` SPI and stores all history
-events in Elastic search. Once the history data is stored in Elasticsearch, it can be queried in a
+events in Elasticsearch. Once the history data is stored in Elasticsearch, it can be queried in a
 flexible way.
 
 ### Components
@@ -62,7 +62,7 @@ instances over time.
 
 ## Installation & Configuration
 
-### Supported camunda BPM Version
+### Supported Camunda BPM Version
 
 Currently camunda BPM 7.2.0 is required.
 
@@ -99,8 +99,7 @@ application:
 
 ##### Spring based Configuration
 
-If you bootstrap your process engine using the Spring Framework, you can configure the elastic
-search plugin using Spring:
+If you bootstrap your process engine using the Spring Framework, you can configure the Elasticsearch plugin using Spring:
 
 ```xml
 <bean id="processEngineConfiguration" class="org.camunda.bpm.engine.spring.SpringProcessEngineConfiguration">
@@ -118,20 +117,20 @@ search plugin using Spring:
 
 #### Installation with Shared Process Engine
 
-If you use a shared process engine, you need to add camunda Elastics Search JAR files and all
-requires Elasticsearch libraries to the process engine classpath and configure the plugin in
+If you use a shared process engine, you need to add camunda Elasticsearch JAR files and all
+required Elasticsearch libraries to the process engine classpath and configure the plugin in
 `bpm-platform.xml` or `standalone.xml` (JBoss).
 
 ##### Installation in JBoss Application Server Distribution
 
-In order to install the elastic search extension on JBoss Application Server with camunda BPM
+In order to install the Elasticsearch extension on JBoss Application Server with Camunda BPM
 subsystem, the following steps are necessary:
 
 * Download a pre-packaged distribution from [camunda.org](http://camunda.org/download/).
-* Unpack the camunda distribution into a folder of your choice.
+* Unpack the Camunda distribution into a folder of your choice.
 * Clone the [camunda-bpm-elasticsearch][repository] repository using Git.
 * Build the repository by typing `mvn clean install`
-* copy the modules from `elasticsearch-jboss-module/target/modules/` to the modules folder of your
+* Copy the modules from `elasticsearch-jboss-module/target/modules/` to the modules folder of your
    jboss distribution.
 * Inside the modules folder of your JBoss Application Server, edit the file 
   `modules/org/camunda/bpm/jboss/camunda-jboss-subsystem/main/module.xm` and add a
@@ -167,7 +166,7 @@ subsystem, the following steps are necessary:
 
 ##### Installation in Tomcat Distribution
 
-In order to install the Elasticsearch process engine plugin in the camunda Tomcat distribution, the
+In order to install the Elasticsearch process engine plugin in the Camunda Tomcat distribution, the
 following steps are necessary:
 
 * Download a pre-packaged distribution from [camunda.org](http://camunda.org/download/).
