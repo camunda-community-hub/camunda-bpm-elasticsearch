@@ -1,36 +1,52 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="camunda-bpm-elasticsearch" default="deploy">
 	<property name="skipTests" value="true" />
+  <condition property="isLinux">
+    <os family="unix" />
+  </condition>
+
+  <condition property="isOSX">
+    <os family="mac" />
+  </condition>
 
   <condition property="mvn.executable" value="mvn.bat" else="mvn">
     <os family="windows"/>
   </condition>
 
-  <condition property="linuxos">
-    <os family="unix" />
-  </condition>
-
   <condition property="archive.type" value="zip" else="tar.gz">
     <os family="windows"/>
   </condition>
-  <!-- maybe check JBOSS_HOME env var and check for existance of directory -->
 
-  <property name="version.camunda-bpm" value="7.1.0-Final" />
+  <target name="init.properties.osx" if="isOSX">
+    <property name="kibana.file" value="darwin-x64" />
+  </target>
+
+  <target name="init.properties.linux" if="isLinux">
+    <property name="kibana.file" value="linux-x64" />
+  </target>
+
+  <target name="init.properties.windows">
+    <property name="kibana.file" value="windows" />
+  </target>
+
+  <target name="init.properties" depends="init.properties.osx, init.properties.linux,init.properties.windows" />
+
+  <property name="version.camunda-bpm" value="7.2.0" />
   <property name="version.tomcat" value="7.0.50" />
   <property name="version.jboss" value="7.2.0.Final" />
-  <property name="version.elasticsearch" value="1.3.1" />
+  <property name="version.elasticsearch" value="1.4.4" />
+  <property name="version.kibana" value="4.0.0" />
   <property name="elasticsearch.dir" value="elasticsearch-${version.elasticsearch}" />
   <property name="elasticsearch.file" value="${elasticsearch.dir}.${archive.type}" />
   <property name="elasticsearch.url" value="https://download.elasticsearch.org/elasticsearch/elasticsearch/${elasticsearch.file}" />
 
   <!-- logstash download https://download.elasticsearch.org/logstash/logstash/logstash-1.4.0.zip -->
-  <!-- kibana download https://download.elasticsearch.org/kibana/kibana/kibana-3.0.0.zip -->
-  <property name="kibana.url" value="https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.${archive.type}" />
+  <property name="kibana.url" value="https://download.elasticsearch.org/kibana/kibana/kibana-${version.kibana}-${kibana.file}.${archive.type}" />
 
   <property name="distro" value="tomcat" /> <!-- jboss or tomcat -->
   <property name="distro.dir" value="camunda-${distro}" />
   <property name="distro.file" value="camunda-bpm-${distro}-${version.camunda-bpm}.tar.gz" />
-  <property name="distro.url" value="http://camunda.org/release/camunda-bpm/${distro}/7.1/${distro.file}" />
+  <property name="distro.url" value="http://camunda.org/release/camunda-bpm/${distro}/7.2/${distro.file}" />
 
   <property name="deploy.dir" value="${basedir}/distro" />
   <!--<property name="deploy.jboss.dir" value="/home/hawky4s/projects/own/camunda-jboss/server/jboss-as-7.2.0.Final" />-->
@@ -69,14 +85,14 @@
     </untar>
   </target>
 
-	<target name="deploy.jboss.distro" if="is.jboss" depends="package.mvn, unpack.distro">
-		<copy todir="${deploy.dir}/${distro.dir}/${server.dir}" overwrite="true">
-			<fileset dir="${basedir}/elasticsearch-jboss-module/target">
-				<include name="modules/**/*" />
-        <include name="standalone/**/*" />
-			</fileset>
-		</copy>
-	</target>
+  <target name="deploy.jboss.distro" if="is.jboss" depends="package.mvn, unpack.distro">
+      <copy todir="${deploy.dir}/${distro.dir}/${server.dir}" overwrite="true">
+          <fileset dir="${basedir}/elasticsearch-jboss-module/target">
+              <include name="modules/**/*" />
+      <include name="standalone/**/*" />
+          </fileset>
+      </copy>
+  </target>
 
   <target name="deploy.tomcat.distro" unless="is.jboss" depends="package.mvn, unpack.distro">
     <copy todir="${deploy.dir}/${distro.dir}/${server.dir}" overwrite="true">
