@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/camunda/camunda-bpm-elasticsearch.png?label=ready&title=Ready)](https://waffle.io/camunda/camunda-bpm-elasticsearch)
 camunda BPM - ElasticSearch extension
 ===========================
 
